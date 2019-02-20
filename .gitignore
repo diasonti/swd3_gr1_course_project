@@ -1,7 +1,6 @@
-/target/
+back-office/target/
 .mvn/
-mvnw
-mvnw.cmd
+.idea/
 
 ### STS ###
 .apt_generated
