@@ -4,13 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.diasonti</groupId>
-    <artifactId>descriptionTinderProject</artifactId>
+    <artifactId>descriptionTinderFront</artifactId>
     <version>0.1.0</version>
     <packaging>pom</packaging>
-
-    <modules>
-        <module>back-office</module>
-        <module>front</module>
-    </modules>
 
 </project>
