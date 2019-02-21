@@ -28,11 +28,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .and()
                 .authorizeRequests()
+
+                .antMatchers("/").permitAll()
+                .antMatchers("/js/**").permitAll()
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/image/**").permitAll()
+
                 .antMatchers("/test/**").permitAll()
                 .antMatchers("/api/login").anonymous()
                 .antMatchers("/api/registration/**").anonymous()
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().authenticated()
+//                .anyRequest().permitAll()
                 .and()
                 .formLogin().loginPage("/api/login")
                 .successHandler(new RestAuthenticationSuccessHandler())
