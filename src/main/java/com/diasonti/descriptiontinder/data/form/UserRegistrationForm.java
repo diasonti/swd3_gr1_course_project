@@ -1,11 +1,21 @@
 package com.diasonti.descriptiontinder.data.form;
 
-public class UserRegistrationForm {
+import com.diasonti.descriptiontinder.config.validation.password.StrongPassword;
+import com.diasonti.descriptiontinder.config.validation.username.UsernameAvailable;
 
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Size;
+
+public class UserRegistrationForm extends BaseForm {
+
+    @Size(min = 1, max = 255, message = "username.length.error")
+    @UsernameAvailable
     private String username;
 
+    @StrongPassword
     private String password;
 
+    @Size(min = 1, max = 255)
     private String passwordVerification;
 
     public String getUsername() {
@@ -30,5 +40,10 @@ public class UserRegistrationForm {
 
     public void setPasswordVerification(String passwordVerification) {
         this.passwordVerification = passwordVerification;
+    }
+
+    @AssertTrue(message = "passwords.not.match")
+    public boolean isEqualPasswords() {
+        return password.equals(passwordVerification);
     }
 }
