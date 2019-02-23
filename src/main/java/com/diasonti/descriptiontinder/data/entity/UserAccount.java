@@ -113,13 +113,11 @@ public class UserAccount extends BaseEntity {
     }
 
     @Transient
-    public UserProfileForm getProfileForm() {
-        final UserProfileForm form = new UserProfileForm();
-        form.setName(name);
-        form.setAge(age);
-        form.setGender(gender);
-        form.setLocation(location);
-        form.setDescription(description);
-        return form;
+    public void updateWithProfileForm(UserProfileForm form) {
+        this.setName(form.getName());
+        this.setGender(form.getGender());
+        this.setAge(form.getAge());
+        this.setLocation(form.getLocation());
+        this.setDescription(form.getDescription());
     }
 }
