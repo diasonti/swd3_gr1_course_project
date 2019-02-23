@@ -2,6 +2,7 @@ package com.diasonti.descriptiontinder.service;
 
 import com.diasonti.descriptiontinder.config.security.UserAccountHolder;
 import com.diasonti.descriptiontinder.data.entity.UserAccount;
+import com.diasonti.descriptiontinder.data.form.MatchmakingPreferenceForm;
 import com.diasonti.descriptiontinder.data.form.UserProfileForm;
 import com.diasonti.descriptiontinder.repository.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,27 @@ public class UserProfileService {
         return UserProfileForm.of(userAccountRepository.findById(userId).orElse(null));
     }
 
+    @Transactional(readOnly = true)
+    public MatchmakingPreferenceForm getMatchmakingPreferences(Long userId) {
+        return MatchmakingPreferenceForm.of(userAccountRepository.findById(userId).orElse(null));
+    }
+
     @Transactional
     public void updateUserProfile(UserProfileForm form) {
         final Long currentUserId = UserAccountHolder.getCurrentUser().getId();
         final UserAccount currentUser = userAccountRepository.findById(currentUserId).orElse(null);
         if (currentUser != null) {
-            currentUser.updateWithProfileForm(form);
+            currentUser.updateWithForm(form);
+            userAccountRepository.save(currentUser);
+        }
+    }
+
+    @Transactional
+    public void updateMatchmakingPreferences(MatchmakingPreferenceForm form) {
+        final Long currentUserId = UserAccountHolder.getCurrentUser().getId();
+        final UserAccount currentUser = userAccountRepository.findById(currentUserId).orElse(null);
+        if (currentUser != null) {
+            currentUser.updateWithForm(form);
             userAccountRepository.save(currentUser);
         }
     }

@@ -21,7 +21,9 @@ public class MatchmakingService {
 
     @Transactional(readOnly = true)
     public UserProfileForm getNextCandidate(Long sourceUserId) {
-        return UserProfileForm.of(userAccountRepository.findNextMatchmakingCandidate(sourceUserId).orElse(null));
+        final UserAccount source = userAccountRepository.findById(sourceUserId).orElse(null);
+        return UserProfileForm.of(userAccountRepository.findNextMatchmakingCandidate(sourceUserId,
+                source.getGenderPreference(), source.getAgePreferenceMin(), source.getAgePreferenceMax(), -1).orElse(null));
     }
 
     @Transactional

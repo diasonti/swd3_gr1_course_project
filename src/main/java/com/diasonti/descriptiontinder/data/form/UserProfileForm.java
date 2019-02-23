@@ -3,6 +3,7 @@ package com.diasonti.descriptiontinder.data.form;
 import com.diasonti.descriptiontinder.data.entity.UserAccount;
 import com.diasonti.descriptiontinder.data.enums.Gender;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -14,7 +15,7 @@ public class UserProfileForm extends BaseForm {
     @NotNull
     private Gender gender;
 
-    @Size(min = 18, message = "underage")
+    @Min(value = 18, message = "underage")
     private int age;
 
     @Size(min = 1, max = 255, message = "invalid.location.length")

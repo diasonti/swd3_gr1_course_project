@@ -1,7 +1,9 @@
 package com.diasonti.descriptiontinder.data.entity;
 
 import com.diasonti.descriptiontinder.data.enums.Gender;
+import com.diasonti.descriptiontinder.data.enums.GenderPreference;
 import com.diasonti.descriptiontinder.data.enums.UserRole;
+import com.diasonti.descriptiontinder.data.form.MatchmakingPreferenceForm;
 import com.diasonti.descriptiontinder.data.form.UserProfileForm;
 
 import javax.persistence.*;
@@ -46,6 +48,16 @@ public class UserAccount extends BaseEntity {
 
     @OneToMany(mappedBy = "target")
     private List<MatchmakingChoice> targetChoices;
+
+    @Column(name = "gender_preference")
+    @Enumerated(EnumType.STRING)
+    private GenderPreference genderPreference;
+
+    @Column(name = "age_preference_min")
+    private Integer agePreferenceMin;
+
+    @Column(name = "age_preference_max")
+    private Integer agePreferenceMax;
 
     public String getUsername() {
         return username;
@@ -135,12 +147,43 @@ public class UserAccount extends BaseEntity {
         this.targetChoices = targetChoices;
     }
 
+    public GenderPreference getGenderPreference() {
+        return genderPreference;
+    }
+
+    public void setGenderPreference(GenderPreference genderPreference) {
+        this.genderPreference = genderPreference;
+    }
+
+    public Integer getAgePreferenceMin() {
+        return agePreferenceMin;
+    }
+
+    public void setAgePreferenceMin(Integer agePreferenceMin) {
+        this.agePreferenceMin = agePreferenceMin;
+    }
+
+    public Integer getAgePreferenceMax() {
+        return agePreferenceMax;
+    }
+
+    public void setAgePreferenceMax(Integer agePreferenceMax) {
+        this.agePreferenceMax = agePreferenceMax;
+    }
+
     @Transient
-    public void updateWithProfileForm(UserProfileForm form) {
+    public void updateWithForm(UserProfileForm form) {
         this.setName(form.getName());
         this.setGender(form.getGender());
         this.setAge(form.getAge());
         this.setLocation(form.getLocation());
         this.setDescription(form.getDescription());
+    }
+
+    @Transient
+    public void updateWithForm(MatchmakingPreferenceForm form) {
+        this.setGenderPreference(form.getGenderPreference());
+        this.setAgePreferenceMin(form.getAgePreferenceMin());
+        this.setAgePreferenceMax(form.getAgePreferenceMax());
     }
 }

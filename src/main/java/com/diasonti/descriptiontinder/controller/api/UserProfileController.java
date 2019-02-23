@@ -2,6 +2,7 @@ package com.diasonti.descriptiontinder.controller.api;
 
 import com.diasonti.descriptiontinder.config.controller.BaseController;
 import com.diasonti.descriptiontinder.data.entity.UserAccount;
+import com.diasonti.descriptiontinder.data.form.MatchmakingPreferenceForm;
 import com.diasonti.descriptiontinder.data.form.UserProfileForm;
 import com.diasonti.descriptiontinder.data.util.RestMessage;
 import com.diasonti.descriptiontinder.service.UserProfileService;
@@ -21,7 +22,7 @@ public class UserProfileController extends BaseController {
     @Autowired
     private UserProfileService profileService;
 
-    @GetMapping
+    @GetMapping("/info")
     public RestMessage getMyUserProfile(UserAccount user) {
         final UserProfileForm form = profileService.getUserProfile(user.getId());
         if (form != null) {
@@ -31,12 +32,32 @@ public class UserProfileController extends BaseController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/info")
     public RestMessage updateMyUserProfile(@Valid UserProfileForm form, Errors errors) {
         if (errors.hasErrors()) {
             return RestMessage.error(getErrorMessages(errors));
         } else {
             profileService.updateUserProfile(form);
+            return RestMessage.ok();
+        }
+    }
+
+    @GetMapping("/pref")
+    public RestMessage getMyMatchmakingPreferences(UserAccount user) {
+        final MatchmakingPreferenceForm form = profileService.getMatchmakingPreferences(user.getId());
+        if (form != null) {
+            return RestMessage.ok(form);
+        } else {
+            return RestMessage.error("preferences.not.found");
+        }
+    }
+
+    @PostMapping("/pref")
+    public RestMessage updateMyMatchmakingPreferences(@Valid MatchmakingPreferenceForm form, Errors errors) {
+        if (errors.hasErrors()) {
+            return RestMessage.error(getErrorMessages(errors));
+        } else {
+            profileService.updateMatchmakingPreferences(form);
             return RestMessage.ok();
         }
     }
