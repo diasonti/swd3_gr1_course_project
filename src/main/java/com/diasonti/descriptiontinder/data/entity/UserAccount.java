@@ -5,6 +5,7 @@ import com.diasonti.descriptiontinder.data.enums.GenderPreference;
 import com.diasonti.descriptiontinder.data.enums.UserRole;
 import com.diasonti.descriptiontinder.data.form.MatchmakingPreferenceForm;
 import com.diasonti.descriptiontinder.data.form.UserProfileForm;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -43,9 +44,11 @@ public class UserAccount extends BaseEntity {
     @Column(name = "description")
     private String description;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "source")
     private List<MatchmakingChoice> sourceChoices;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "target")
     private List<MatchmakingChoice> targetChoices;
 

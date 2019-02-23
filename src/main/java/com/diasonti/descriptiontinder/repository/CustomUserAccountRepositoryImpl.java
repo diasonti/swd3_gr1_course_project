@@ -21,9 +21,9 @@ public class CustomUserAccountRepositoryImpl implements CustomUserAccountReposit
                 "  SELECT target_user_id FROM matchmaking_choice WHERE source_user_id = :source_id\n" +
                 ")\n" +
                 "SELECT * \n" +
-                "FROM user_account ua, prev_targets pv \n" +
+                "FROM user_account ua \n" +
                 "WHERE ua.id != :source_id \n" +
-                "  AND ua.id NOT IN (SELECT target_user_id FROM pv)\n" +
+                "  AND ua.id NOT IN (SELECT target_user_id FROM prev_targets)\n" +
                 "  AND ua.age BETWEEN :ageFrom AND :ageTo\n" +
                 "  AND ua.gender IN (" + genderPref.getGendersAsString() + ")\n" +
                 "ORDER BY ua.id ASC\n" +

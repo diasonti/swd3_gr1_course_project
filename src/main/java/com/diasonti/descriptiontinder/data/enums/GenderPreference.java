@@ -19,6 +19,6 @@ public enum GenderPreference {
     }
 
     public String getGendersAsString() {
-        return Arrays.stream(this.genders).map(Enum::name).collect(Collectors.joining(", "));
+        return Arrays.stream(this.genders).map(g -> "'" + g.name() + "'").collect(Collectors.joining(", "));
     }
 }

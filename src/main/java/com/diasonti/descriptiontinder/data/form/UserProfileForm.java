@@ -16,7 +16,7 @@ public class UserProfileForm extends BaseForm {
     private Gender gender;
 
     @Min(value = 18, message = "underage")
-    private int age;
+    private Integer age;
 
     @Size(min = 1, max = 255, message = "invalid.location.length")
     private String location;
@@ -54,11 +54,11 @@ public class UserProfileForm extends BaseForm {
         this.gender = gender;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 
