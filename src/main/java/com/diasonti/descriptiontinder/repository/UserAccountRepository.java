@@ -1,4 +1,4 @@
-package com.diasonti.descriptiontinder.repository.interfaces;
+package com.diasonti.descriptiontinder.repository;
 
 import com.diasonti.descriptiontinder.data.entity.UserAccount;
 import org.springframework.data.repository.CrudRepository;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserAccountRepository extends CrudRepository<UserAccount, Long> {
+public interface UserAccountRepository extends CrudRepository<UserAccount, Long>, CustomUserAccountRepository {
 
     Optional<UserAccount> findByUsername(String username);
 

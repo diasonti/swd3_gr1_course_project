@@ -3,7 +3,7 @@ package com.diasonti.descriptiontinder.service;
 import com.diasonti.descriptiontinder.data.entity.UserAccount;
 import com.diasonti.descriptiontinder.data.enums.UserRole;
 import com.diasonti.descriptiontinder.data.form.UserRegistrationForm;
-import com.diasonti.descriptiontinder.repository.interfaces.UserAccountRepository;
+import com.diasonti.descriptiontinder.repository.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

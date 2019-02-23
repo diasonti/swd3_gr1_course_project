@@ -1,7 +1,7 @@
 package com.diasonti.descriptiontinder.config.security;
 
 import com.diasonti.descriptiontinder.data.entity.UserAccount;
-import com.diasonti.descriptiontinder.repository.interfaces.UserAccountRepository;
+import com.diasonti.descriptiontinder.repository.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

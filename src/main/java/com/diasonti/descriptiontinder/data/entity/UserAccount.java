@@ -6,6 +6,7 @@ import com.diasonti.descriptiontinder.data.form.UserProfileForm;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "user_account")
@@ -21,7 +22,7 @@ public class UserAccount extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Column(name = "registered_at")
+    @Column(name = "registered_at", updatable = false)
     private LocalDateTime registeredAt;
 
     @Column(name = "name")
@@ -39,6 +40,12 @@ public class UserAccount extends BaseEntity {
 
     @Column(name = "description")
     private String description;
+
+    @OneToMany(mappedBy = "source")
+    private List<MatchmakingChoice> sourceChoices;
+
+    @OneToMany(mappedBy = "target")
+    private List<MatchmakingChoice> targetChoices;
 
     public String getUsername() {
         return username;
@@ -110,6 +117,22 @@ public class UserAccount extends BaseEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<MatchmakingChoice> getSourceChoices() {
+        return sourceChoices;
+    }
+
+    public void setSourceChoices(List<MatchmakingChoice> sourceChoices) {
+        this.sourceChoices = sourceChoices;
+    }
+
+    public List<MatchmakingChoice> getTargetChoices() {
+        return targetChoices;
+    }
+
+    public void setTargetChoices(List<MatchmakingChoice> targetChoices) {
+        this.targetChoices = targetChoices;
     }
 
     @Transient
