@@ -3,7 +3,7 @@ package com.diasonti.descriptiontinder.data.entity;
 import com.diasonti.descriptiontinder.data.enums.Gender;
 import com.diasonti.descriptiontinder.data.enums.GenderPreference;
 import com.diasonti.descriptiontinder.data.enums.UserRole;
-import com.diasonti.descriptiontinder.data.form.MatchmakingPreferenceForm;
+import com.diasonti.descriptiontinder.data.form.MmPreferenceForm;
 import com.diasonti.descriptiontinder.data.form.UserProfileForm;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -46,11 +46,11 @@ public class UserAccount extends BaseEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "source")
-    private List<MatchmakingChoice> sourceChoices;
+    private List<MmChoice> sourceChoices;
 
     @JsonIgnore
     @OneToMany(mappedBy = "target")
-    private List<MatchmakingChoice> targetChoices;
+    private List<MmChoice> targetChoices;
 
     @Column(name = "gender_preference")
     @Enumerated(EnumType.STRING)
@@ -134,19 +134,19 @@ public class UserAccount extends BaseEntity {
         this.description = description;
     }
 
-    public List<MatchmakingChoice> getSourceChoices() {
+    public List<MmChoice> getSourceChoices() {
         return sourceChoices;
     }
 
-    public void setSourceChoices(List<MatchmakingChoice> sourceChoices) {
+    public void setSourceChoices(List<MmChoice> sourceChoices) {
         this.sourceChoices = sourceChoices;
     }
 
-    public List<MatchmakingChoice> getTargetChoices() {
+    public List<MmChoice> getTargetChoices() {
         return targetChoices;
     }
 
-    public void setTargetChoices(List<MatchmakingChoice> targetChoices) {
+    public void setTargetChoices(List<MmChoice> targetChoices) {
         this.targetChoices = targetChoices;
     }
 
@@ -184,7 +184,7 @@ public class UserAccount extends BaseEntity {
     }
 
     @Transient
-    public void updateWithForm(MatchmakingPreferenceForm form) {
+    public void updateWithForm(MmPreferenceForm form) {
         this.setGenderPreference(form.getGenderPreference());
         this.setAgePreferenceMin(form.getAgePreferenceMin());
         this.setAgePreferenceMax(form.getAgePreferenceMax());

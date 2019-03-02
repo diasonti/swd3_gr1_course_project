@@ -6,7 +6,7 @@ import com.diasonti.descriptiontinder.data.enums.GenderPreference;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class MatchmakingPreferenceForm extends BaseForm {
+public class MmPreferenceForm extends BaseForm {
 
     @NotNull(message = "gender.preference.empty")
     private GenderPreference genderPreference;
@@ -18,10 +18,10 @@ public class MatchmakingPreferenceForm extends BaseForm {
     @NotNull(message = "age.preference.max.empty")
     private Integer agePreferenceMax;
 
-    public static MatchmakingPreferenceForm of(UserAccount user) {
-        MatchmakingPreferenceForm form = null;
+    public static MmPreferenceForm of(UserAccount user) {
+        MmPreferenceForm form = null;
         if(user != null) {
-            form = new MatchmakingPreferenceForm();
+            form = new MmPreferenceForm();
             form.setId(user.getId());
             form.setGenderPreference(user.getGenderPreference());
             form.setAgePreferenceMax(user.getAgePreferenceMax());

@@ -2,7 +2,7 @@ package com.diasonti.descriptiontinder.service;
 
 import com.diasonti.descriptiontinder.config.security.UserAccountHolder;
 import com.diasonti.descriptiontinder.data.entity.UserAccount;
-import com.diasonti.descriptiontinder.data.form.MatchmakingPreferenceForm;
+import com.diasonti.descriptiontinder.data.form.MmPreferenceForm;
 import com.diasonti.descriptiontinder.data.form.UserProfileForm;
 import com.diasonti.descriptiontinder.repository.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +25,8 @@ public class UserProfileService {
     }
 
     @Transactional(readOnly = true)
-    public MatchmakingPreferenceForm getMatchmakingPreferences(Long userId) {
-        return MatchmakingPreferenceForm.of(userAccountRepository.findById(userId).orElse(null));
+    public MmPreferenceForm getMatchmakingPreferences(Long userId) {
+        return MmPreferenceForm.of(userAccountRepository.findById(userId).orElse(null));
     }
 
     @Transactional
@@ -40,7 +40,7 @@ public class UserProfileService {
     }
 
     @Transactional
-    public void updateMatchmakingPreferences(MatchmakingPreferenceForm form) {
+    public void updateMatchmakingPreferences(MmPreferenceForm form) {
         final Long currentUserId = UserAccountHolder.getCurrentUser().getId();
         final UserAccount currentUser = userAccountRepository.findById(currentUserId).orElse(null);
         if (currentUser != null) {

@@ -4,10 +4,12 @@ import com.diasonti.descriptiontinder.data.enums.MatchType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "matchmaking_match")
-public class MatchmakingMatch extends BaseEntity {
+public class MmMatch extends BaseEntity {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -22,26 +24,29 @@ public class MatchmakingMatch extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "first_user_choice_id")
-    private MatchmakingChoice firstUserChoice;
+    private MmChoice firstUserChoice;
 
     @ManyToOne
     @JoinColumn(name = "second_user_choice_id")
-    private MatchmakingChoice secondUserChoice;
+    private MmChoice secondUserChoice;
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private MatchType type;
 
-    public MatchmakingMatch() {
+    @OneToMany(mappedBy = "match")
+    @OrderBy("sentAt ASC")
+    private List<ChatMessage> messages;
 
+    public MmMatch() {
     }
 
-    public MatchmakingMatch(MatchmakingChoice firstUserChoice, MatchmakingChoice secondUserChoice) {
+    public MmMatch(MmChoice firstUserChoice, MmChoice secondUserChoice) {
         this.createdAt = LocalDateTime.now();
+        this.firstUserChoice = Objects.requireNonNull(firstUserChoice, "First user's choice must not be null");
+        this.secondUserChoice = Objects.requireNonNull(secondUserChoice, "Second user's choice must not be null");
         this.firstUser = firstUserChoice.getSource();
         this.secondUser = secondUserChoice.getSource();
-        this.firstUserChoice = firstUserChoice;
-        this.secondUserChoice = secondUserChoice;
         this.type = MatchType.MUTUAL;
     }
 
@@ -69,19 +74,19 @@ public class MatchmakingMatch extends BaseEntity {
         this.secondUser = secondUser;
     }
 
-    public MatchmakingChoice getFirstUserChoice() {
+    public MmChoice getFirstUserChoice() {
         return firstUserChoice;
     }
 
-    public void setFirstUserChoice(MatchmakingChoice firstUserChoice) {
+    public void setFirstUserChoice(MmChoice firstUserChoice) {
         this.firstUserChoice = firstUserChoice;
     }
 
-    public MatchmakingChoice getSecondUserChoice() {
+    public MmChoice getSecondUserChoice() {
         return secondUserChoice;
     }
 
-    public void setSecondUserChoice(MatchmakingChoice secondUserChoice) {
+    public void setSecondUserChoice(MmChoice secondUserChoice) {
         this.secondUserChoice = secondUserChoice;
     }
 
@@ -91,5 +96,18 @@ public class MatchmakingMatch extends BaseEntity {
 
     public void setType(MatchType type) {
         this.type = type;
+    }
+
+    public List<ChatMessage> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<ChatMessage> messages) {
+        this.messages = messages;
+    }
+
+    @Transient
+    public boolean hasUserWithId(Long userId) {
+        return firstUser.getId().equals(userId) || secondUser.getId().equals(userId);
     }
 }

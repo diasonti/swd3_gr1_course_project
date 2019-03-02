@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "matchmaking_choice")
-public class MatchmakingChoice extends BaseEntity {
+public class MmChoice extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "source_user_id")

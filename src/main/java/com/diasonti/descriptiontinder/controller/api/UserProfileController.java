@@ -2,7 +2,7 @@ package com.diasonti.descriptiontinder.controller.api;
 
 import com.diasonti.descriptiontinder.config.controller.BaseController;
 import com.diasonti.descriptiontinder.data.entity.UserAccount;
-import com.diasonti.descriptiontinder.data.form.MatchmakingPreferenceForm;
+import com.diasonti.descriptiontinder.data.form.MmPreferenceForm;
 import com.diasonti.descriptiontinder.data.form.UserProfileForm;
 import com.diasonti.descriptiontinder.data.util.RestMessage;
 import com.diasonti.descriptiontinder.service.UserProfileService;
@@ -48,7 +48,7 @@ public class UserProfileController extends BaseController {
 
     @GetMapping("/pref")
     public RestMessage getMyMatchmakingPreferences(UserAccount user) {
-        final MatchmakingPreferenceForm form = profileService.getMatchmakingPreferences(user.getId());
+        final MmPreferenceForm form = profileService.getMatchmakingPreferences(user.getId());
         if (form != null) {
             return RestMessage.ok(form);
         } else {
@@ -57,7 +57,7 @@ public class UserProfileController extends BaseController {
     }
 
     @PostMapping("/pref")
-    public RestMessage updateMyMatchmakingPreferences(@Valid MatchmakingPreferenceForm form, Errors errors) {
+    public RestMessage updateMyMatchmakingPreferences(@Valid MmPreferenceForm form, Errors errors) {
         if (errors.hasErrors()) {
             return RestMessage.error(getErrorMessages(errors));
         } else {
