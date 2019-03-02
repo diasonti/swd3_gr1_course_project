@@ -12,8 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserProfileService {
 
+    private final UserAccountRepository userAccountRepository;
+
     @Autowired
-    private UserAccountRepository userAccountRepository;
+    public UserProfileService(UserAccountRepository userAccountRepository) {
+        this.userAccountRepository = userAccountRepository;
+    }
 
     @Transactional(readOnly = true)
     public UserProfileForm getUserProfile(Long userId) {

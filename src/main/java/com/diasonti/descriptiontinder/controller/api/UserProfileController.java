@@ -19,8 +19,12 @@ import javax.validation.Valid;
 @RequestMapping("/api/profile")
 public class UserProfileController extends BaseController {
 
+    private final UserProfileService profileService;
+
     @Autowired
-    private UserProfileService profileService;
+    public UserProfileController(UserProfileService profileService) {
+        this.profileService = profileService;
+    }
 
     @GetMapping("/info")
     public RestMessage getMyUserProfile(UserAccount user) {

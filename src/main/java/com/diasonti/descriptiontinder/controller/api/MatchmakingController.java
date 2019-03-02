@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/mm")
 public class MatchmakingController {
 
+    private final MatchmakingService matchmakingService;
+
     @Autowired
-    private MatchmakingService matchmakingService;
+    public MatchmakingController(MatchmakingService matchmakingService) {
+        this.matchmakingService = matchmakingService;
+    }
 
     @GetMapping("/next")
     public RestMessage nextCandidate(UserAccount user) {

@@ -14,8 +14,12 @@ import javax.validation.Valid;
 @RequestMapping("/api/registration")
 public class UserRegistrationController extends BaseController {
 
+    private final UserAccountService registrationService;
+
     @Autowired
-    private UserAccountService registrationService;
+    public UserRegistrationController(UserAccountService registrationService) {
+        this.registrationService = registrationService;
+    }
 
     @GetMapping("/isUsernameAvailable")
     public RestMessage checkUsername(@RequestParam String username) {
