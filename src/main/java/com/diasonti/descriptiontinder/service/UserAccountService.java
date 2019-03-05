@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 
 @Service
 public class UserAccountService {
@@ -22,6 +23,17 @@ public class UserAccountService {
     public UserAccountService(UserAccountRepository userAccountRepository, PasswordEncoder passwordEncoder) {
         this.userAccountRepository = userAccountRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Transactional(readOnly = true)
+    public String getAuthToken(String username, String password) {
+        final UserAccount userAccount = userAccountRepository.findByUsername(username).orElse(null);
+        String token = null;
+        if(userAccount != null && passwordEncoder.matches(password, userAccount.getPassword())) {
+            final String pair = username + ":" + password;
+            token = Base64.getEncoder().encodeToString(pair.getBytes());
+        }
+        return token;
     }
 
     @Transactional(readOnly = true)

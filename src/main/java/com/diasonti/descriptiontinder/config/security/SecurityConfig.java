@@ -5,10 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -24,22 +25,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf()
-                    .disable()
-                .exceptionHandling()
-                    .authenticationEntryPoint(new RestAuthenticationEntryPoint())
-                .and().authorizeRequests()
+                .csrf().disable()
+                .authorizeRequests()
                     .antMatchers("/", "/js/**", "/css/**", "/image/**", "/test/**").permitAll()
-                    .antMatchers("/api/login", "/api/registration/**").anonymous()
+                    .antMatchers("/api/auth/**", "/api/registration/**").permitAll()
                     .antMatchers("/api/**").authenticated()
                     .anyRequest().denyAll()
-//                   .anyRequest().permitAll()
-                .and().formLogin()
-                    .loginPage("/api/login")
-                    .successHandler(new RestAuthenticationSuccessHandler())
-                    .failureHandler(new SimpleUrlAuthenticationFailureHandler())
-                .and().logout()
-                    .logoutUrl("/api/logout");
+                .and().httpBasic().authenticationEntryPoint(apiBasicAuthenticationEntryPoint())
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        ;
+    }
+
+    @Bean
+    public BasicAuthenticationEntryPoint apiBasicAuthenticationEntryPoint() {
+        final BasicAuthenticationEntryPoint entryPoint = new ApiBasicAuthenticationEntryPoint();
+        entryPoint.setRealmName("DTINDER");
+        return entryPoint;
     }
 
     @Bean
