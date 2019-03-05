@@ -7,14 +7,12 @@ import com.diasonti.descriptiontinder.data.util.RestMessage;
 import com.diasonti.descriptiontinder.service.ChatService;
 import com.diasonti.descriptiontinder.service.MatchmakingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping(path = "/api")
 public class AfterMatchController {
 
     private final MatchmakingService matchmakingService;
@@ -27,14 +25,14 @@ public class AfterMatchController {
         this.chatService = chatService;
     }
 
-    @GetMapping("/matches")
+    @GetMapping("/chat/list")
     public RestMessage getMatches(UserAccount userAccount) {
         List<MmMatchForm> matches = matchmakingService.getMatches(userAccount.getId());
         return RestMessage.ok(matches);
     }
 
     @GetMapping("/chat/get")
-    public RestMessage getMatches(@RequestParam Long matchId, @RequestParam int from, @RequestParam int to) {
+    public RestMessage getMessages(@RequestParam Long matchId, @RequestParam int from, @RequestParam int to) {
         final List<ChatMessageForm> messages = chatService.getMessages(matchId, from,  to);
         return RestMessage.ok(messages);
     }

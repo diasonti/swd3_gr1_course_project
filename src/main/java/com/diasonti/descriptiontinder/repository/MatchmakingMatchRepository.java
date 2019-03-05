@@ -14,4 +14,6 @@ public interface MatchmakingMatchRepository extends CrudRepository<MmMatch, Long
     Optional<MmMatch> findByFirstUserAndSecondUser(UserAccount firstUser, UserAccount secondUser);
 
     List<MmMatch> findAllByFirstUserOrSecondUser(UserAccount firstUser, UserAccount secondUser);
+
+    boolean existsByFirstUserAndSecondUser(UserAccount firstUser, UserAccount secondUser);
 }

@@ -30,7 +30,9 @@ public class MatchmakingController {
 
     @PostMapping("/like")
     public RestMessage like(UserAccount user, @RequestParam(name = "id") Long candidateId) {
-        matchmakingService.saveLike(user.getId(), candidateId);
+        if (matchmakingService.saveLike(user.getId(), candidateId)) {
+            matchmakingService.checkAndSaveMatch(user.getId(), candidateId);
+        }
         return RestMessage.ok();
     }
 

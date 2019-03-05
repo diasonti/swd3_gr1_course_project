@@ -1,6 +1,5 @@
 package com.diasonti.descriptiontinder.data.form;
 
-import com.diasonti.descriptiontinder.data.entity.UserAccount;
 import com.diasonti.descriptiontinder.data.enums.MatchType;
 
 import java.time.LocalDateTime;
@@ -9,7 +8,7 @@ public class MmMatchForm extends BaseForm {
 
     private LocalDateTime matchedAt;
 
-    private UserAccount matchedUser;
+    private UserProfileForm matchedUser;
 
     private MatchType type;
 
@@ -23,11 +22,11 @@ public class MmMatchForm extends BaseForm {
         this.matchedAt = matchedAt;
     }
 
-    public UserAccount getMatchedUser() {
+    public UserProfileForm getMatchedUser() {
         return matchedUser;
     }
 
-    public void setMatchedUser(UserAccount matchedUser) {
+    public void setMatchedUser(UserProfileForm matchedUser) {
         this.matchedUser = matchedUser;
     }
 

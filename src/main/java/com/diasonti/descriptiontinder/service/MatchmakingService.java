@@ -12,9 +12,9 @@ import com.diasonti.descriptiontinder.repository.ChatMessageRepository;
 import com.diasonti.descriptiontinder.repository.MatchmakingChoiceRepository;
 import com.diasonti.descriptiontinder.repository.MatchmakingMatchRepository;
 import com.diasonti.descriptiontinder.repository.UserAccountRepository;
-import com.diasonti.descriptiontinder.utils.TransactionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
@@ -53,26 +53,28 @@ public class MatchmakingService {
     }
 
     @Transactional
-    public void saveLike(Long sourceUserId, Long targetUserId) {
-        saveChoice(sourceUserId, targetUserId, MatchmakingDecision.LIKE);
-        TransactionUtils.afterTransaction(() -> checkAndSaveMatch(sourceUserId, targetUserId));
+    public boolean saveLike(Long sourceUserId, Long targetUserId) {
+        return saveChoice(sourceUserId, targetUserId, MatchmakingDecision.LIKE);
     }
 
     @Transactional
-    public void saveDislike(Long sourceUserId, Long targetUserId) {
-        saveChoice(sourceUserId, targetUserId, MatchmakingDecision.DISLIKE);
+    public boolean saveDislike(Long sourceUserId, Long targetUserId) {
+        return saveChoice(sourceUserId, targetUserId, MatchmakingDecision.DISLIKE);
     }
 
-    private void saveChoice(Long sourceUserId, Long targetUserId, MatchmakingDecision decision) {
+    @Transactional(propagation = Propagation.MANDATORY)
+    protected boolean saveChoice(Long sourceUserId, Long targetUserId, MatchmakingDecision decision) {
         final UserAccount source = userAccountRepository.findById(sourceUserId).orElse(null);
         final UserAccount target = userAccountRepository.findById(targetUserId).orElse(null);
-        if (source != null && target != null) {
+        if (source != null && target != null && !choiceRepository.existsBySourceAndTarget(source, target)) {
             MmChoice choice = new MmChoice();
             choice.setSource(source);
             choice.setTarget(target);
             choice.setDecision(decision);
             choiceRepository.save(choice);
+            return true;
         }
+        return false;
     }
 
     @Transactional
@@ -107,10 +109,11 @@ public class MatchmakingService {
         List<MmMatch> matches = matchRepository.findAllByFirstUserOrSecondUser(user, user);
         return matches.stream().map(match -> {
             final MmMatchForm form = new MmMatchForm();
+            form.setId(match.getId());
             if (match.getFirstUser().equals(user))
-                form.setMatchedUser(match.getSecondUser());
+                form.setMatchedUser(UserProfileForm.of(match.getSecondUser()));
             else
-                form.setMatchedUser(match.getFirstUser());
+                form.setMatchedUser(UserProfileForm.of(match.getFirstUser()));
             form.setMatchedAt(match.getCreatedAt());
             form.setType(match.getType());
             final ChatMessage lastMessage = chatMessageRepository.findTopByMatchOrderBySentAtDesc(match).orElse(null);

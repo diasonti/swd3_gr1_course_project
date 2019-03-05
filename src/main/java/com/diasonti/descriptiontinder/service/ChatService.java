@@ -48,7 +48,7 @@ public class ChatService {
         final UserAccount sender = UserAccountHolder.getCurrentUser();
         if(match == null || !match.hasUserWithId(sender.getId()))
             return false;
-        final UserAccount receiver = match.getFirstUser() != sender ? match.getFirstUser() : match.getSecondUser();
+        final UserAccount receiver = match.getFirstUser().equals(sender) ? match.getSecondUser() : match.getFirstUser();
         final ChatMessage message = new ChatMessage();
         message.setMatch(match);
         message.setSender(sender);

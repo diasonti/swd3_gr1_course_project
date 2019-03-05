@@ -41,6 +41,11 @@ public class UserAccountService {
         return !userAccountRepository.existsByUsername(username);
     }
 
+    @Transactional(readOnly = true)
+    public UserAccount getUserAccountByUsername(String username) {
+        return userAccountRepository.findByUsername(username).orElse(null);
+    }
+
     @Transactional
     public void register(UserRegistrationForm form) {
         UserAccount userAccount = new UserAccount();

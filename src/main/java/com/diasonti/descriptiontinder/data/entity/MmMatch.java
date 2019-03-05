@@ -4,6 +4,7 @@ import com.diasonti.descriptiontinder.data.enums.MatchType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,6 +49,7 @@ public class MmMatch extends BaseEntity {
         this.firstUser = firstUserChoice.getSource();
         this.secondUser = secondUserChoice.getSource();
         this.type = MatchType.MUTUAL;
+        this.messages = new ArrayList<>();
     }
 
     public LocalDateTime getCreatedAt() {

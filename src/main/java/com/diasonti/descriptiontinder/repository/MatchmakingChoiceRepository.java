@@ -13,4 +13,6 @@ public interface MatchmakingChoiceRepository extends CrudRepository<MmChoice, Lo
 
     Optional<MmChoice> findBySourceAndTargetAndDecision(UserAccount source, UserAccount target, MatchmakingDecision decision);
 
+    boolean existsBySourceAndTarget(UserAccount source, UserAccount target);
+
 }
