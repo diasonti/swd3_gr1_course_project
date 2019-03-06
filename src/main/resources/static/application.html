@@ -14,8 +14,8 @@
 
         }
 
-        .centerDiv {
-
+        .nav-scroller a{
+            font-size: 1.5em;
         }
     </style>
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -61,6 +61,8 @@
         </nav>
     </div>
 
+    <hr>
+
 
     <!--main content-->
     <div>
@@ -100,11 +102,12 @@
                     <div class="form-row">
                         <div class="col-md-8 mb-3">
                             <label for="des">Description</label>
-                            <textarea class="form-control-plaintext" id="des" name="des" rows="3" v-model="myDescription" readonly></textarea>
+                            <textarea class="form-control-plaintext" id="des" name="des" rows="3"
+                                      v-model="myDescription" readonly></textarea>
                         </div>
 
                     </div>
-                    <button class="btn btn-primary" v-on:click="toEditProfile">Edit</button>
+                    <button type="button" class="btn btn-primary" v-on:click="toEditProfile">Edit</button>
                 </form>
 
                 <form class="needs-validation" novalidate id="profile_edit" v-if="edit">
@@ -151,12 +154,14 @@
                     <div class="form-row">
                         <div class="col-md-8 mb-3">
                             <label for="desE">Description</label>
-                            <textarea class="form-control-plaintext" id="desE" name="desE" rows="3" v-model="myDescription"></textarea>
+                            <textarea class="form-control-plaintext" id="desE" name="desE" rows="3"
+                                      v-model="myDescription"></textarea>
 
                         </div>
 
                     </div>
                     <button class="btn btn-primary" type="submit">Submit form</button>
+                    <button type="button" class="btn btn-info" v-on:click="toViewProfile">Back</button>
                 </form>
 
 
@@ -420,11 +425,11 @@
                         </div>
                         <div class="form-group">
                             <label for="signInPassword">Password</label>
-                            <input type="password" class="form-control" id="signInPassword"
+                            <input type="password" class="form-control" id="signInPassword" v-model="password"
                                    placeholder="Password">
                         </div>
 
-                        <button v-on:click="" type="submit" class="btn btn-primary">Sign in</button>
+                        <button v-on:click="submitSignInForm" type="button" class="btn btn-primary">Sign in</button>
 
 
                         <p v-on:click="toSignUpTab" class="float-right">Don't have an account?</p>
@@ -470,6 +475,7 @@
 <script src="js/config.js"></script>
 <script>
     var app;
+
     app = new Vue({
         el: '#app',
         data: {
@@ -480,10 +486,10 @@
             loginTab: true,
             edit: false,
             username: '',
+            password:'',
             signUpUsername: '',
             signUpPassword: '',
             signUpPassword2: '',
-            username: 'Mike',
             gender: 'male',
             age: '18',
             city: 'Almaty',
@@ -527,12 +533,20 @@
             },
 
             toEditProfile: function () {
-                this.edit = !this.edit;
+                this.edit = true;
+            },
+
+            toViewProfile: function () {
+                this.edit = false;
             },
 
 
             submitSignUpForm: function () {
                 submitSignUpForm(this.signUpUsername, this.signUpPassword, this.signUpPassword2);
+            },
+
+            submitSignInForm: function () {
+                submitSignInForm(this.username, this.password);
             }
         }
     });
@@ -557,6 +571,28 @@
                 } else if (msg.status == 'error') {
                     alert('errors: ' + msg.content);
                 }
+            });
+    }
+
+    var submitSignInForm = function (username, password) {
+        console.log(username)
+        console.log(password)
+        $.ajax({
+            method: "POST",
+            url: api + "/login",
+            data: {
+                username: app.username,
+                password: app.password
+            },
+            xhrFields: {
+                withCredentials: true
+            },
+            // crossDomain: true
+        })
+            .done(function (msg) {
+
+                app.age = 52;
+
             });
     }
 </script>
