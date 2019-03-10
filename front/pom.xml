@@ -12,5 +12,6 @@
     <artifactId>dtinder-front</artifactId>
     <version>1.0</version>
     <packaging>pom</packaging>
+    <name>DTinder-Front</name>
 
 </project>

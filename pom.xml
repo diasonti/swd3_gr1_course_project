@@ -14,6 +14,7 @@
     <artifactId>dtinder</artifactId>
     <packaging>pom</packaging>
 	<version>1.0</version>
+    <name>Description Tinder</name>
 
 	<modules>
         <module>back-office</module>
