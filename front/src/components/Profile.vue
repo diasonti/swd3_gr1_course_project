@@ -35,7 +35,7 @@
             <h1>My matchmaking preferences</h1>
             <form>
                 <div class="form-group">
-                    <label for="mmPrefGenderInput">My gender</label>
+                    <label for="mmPrefGenderInput">I want to find</label>
                     <select v-model="mmPrefGender" class="form-control" id="mmPrefGenderInput">
                         <option value="MALE">Male</option>
                         <option value="FEMALE">Female</option>

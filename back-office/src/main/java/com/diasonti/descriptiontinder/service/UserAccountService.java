@@ -61,7 +61,7 @@ public class UserAccountService {
         userAccount.setPassword(passwordEncoder.encode(form.getPassword()));
         userAccount.setRole(UserRole.USER);
         userAccount.setRegisteredAt(LocalDateTime.now());
+        userAccount = userAccountRepository.save(userAccount);
         log.info("User registered: {}", userAccount.toString());
-        userAccountRepository.save(userAccount);
     }
 }
