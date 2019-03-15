@@ -31,16 +31,19 @@
                     <div class="form-group">
                         <label for="registerUsernameInput">Username</label>
                         <input v-model="registerUsername" type="text" class="form-control no-autocomplete" id="registerUsernameInput"
+                               :class="{'is-invalid': registrationUsernameError}"
                                placeholder="Enter username" @keyup.enter="submitRegistration" readonly>
                     </div>
                     <div class="form-group">
                         <label for="registerPasswordInput1">Password</label>
                         <input v-model="registerPassword1" type="password" class="form-control no-autocomplete" id="registerPasswordInput1"
+                               :class="{'is-invalid': registrationPassword1Error}"
                                placeholder="Enter password" @keyup.enter="submitRegistration" readonly>
                     </div>
                     <div class="form-group">
                         <label for="registerPasswordInput2">Confirm password</label>
                         <input v-model="registerPassword2" type="password" class="form-control no-autocomplete" id="registerPasswordInput2"
+                               :class="{'is-invalid': registrationPassword2Error}"
                                placeholder="Enter password again" @keyup.enter="submitRegistration" readonly>
                     </div>
                     <button @click="submitRegistration" type="button" class="btn btn-primary">Sign up</button>
@@ -64,12 +67,26 @@
                 currentTab: 'login',
                 logInUsername: '',
                 logInPassword: '',
-                logInFailed: false,
+                loginErrors: [],
                 registerUsername: '',
                 registerPassword1: '',
                 registerPassword2: '',
                 registerSuccess: false,
-                registerFailed: false
+                registerErrors: []
+            }
+        },
+        computed: {
+            registrationUsernameError () {
+                const errors = ['username.length.error', 'username.is.taken'];
+                return this.registerErrors.some(r=> errors.includes(r));
+            },
+            registrationPassword1Error () {
+                const errors = ['password.too.weak'];
+                return this.registerErrors.some(r=> errors.includes(r));
+            },
+            registrationPassword2Error () {
+                const errors = ['passwords.not.match'];
+                return this.registerErrors.some(r=> errors.includes(r));
             }
         },
         methods: {
@@ -85,7 +102,6 @@
             },
             submitRegistration() {
                 this.registerSuccess = false;
-                this.registerFailed = false;
                 const formData = new FormData();
                 formData.append('username', this.registerUsername);
                 formData.append('password', this.registerPassword1);
@@ -95,24 +111,26 @@
                         if(response.data.status === 'ok') {
                             this.registerSuccess = true;
                         } else if(response.data.status === 'error') {
-                            this.registerFailed = true;
+                            this.registerErrors = response.data.content[0];
                         }
                     }).catch((error) => {
                         if(error)
                             this.registerFailed = true;
                 });
+            },
+            hasSignupError(error) {
+                return this.registerErrors.includes(error);
             }
         },
-        created: function() {
+        created () {
             if(this.$store.getters.token) {
                 this.$router.replace('/profile');
             }
-
-            // Workaround to prevent form autocomplete
-            setTimeout(function () {
-                const inputs = $(".no-autocomplete");
-                inputs.attr('readonly', false);
-            }, 100);
+        },
+        updated () {
+            this.$nextTick(function () {
+                $('input.no-autocomplete').removeAttr('readonly');
+            })
         }
     }
 </script>

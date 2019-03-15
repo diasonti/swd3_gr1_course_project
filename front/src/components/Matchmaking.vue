@@ -1,14 +1,32 @@
 <template>
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">{{name}}</h5>
-            <p class="card-text">Age: {{age}}</p>
-            <p class="card-text">Gender: {{gender}}</p>
-            <p class="card-text">From: {{location}}</p>
-            <p class="card-text">{{description}}</p>
-            <button @click="like" type="button" class="btn btn-success">Like</button>
-            <button @click="dislike" type="button" class="btn btn-danger">Dislike</button>
+
+    <div class="container-fluid">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">What about this one?</div>
+                <div class="card-body">
+                    <p>Name: {{currentCandidate.name}}</p>
+                    <p>Age: {{currentCandidate.age}}</p>
+                    <p>Gender: {{currentCandidate.gender}}</p>
+                    <p>From: {{currentCandidate.location}}</p>
+                    <p>From: {{currentCandidate.description}}</p>
+                </div>
+                <div class="card-footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col">
+                                <button @click="like" type="button" class="btn btn-success">Like</button>
+                            </div>
+                            <div class="col">
+                                <button @click="dislike" type="button" class="btn btn-danger">Dislike</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div class="col-3"></div>
     </div>
 </template>
 
@@ -18,11 +36,13 @@
         data() {
             return {
                 id: "",
-                name: "name",
-                gender: "gender",
-                age: "age",
-                location: "location",
-                description: "Some quick example text to build on the card title and make up the bulk of the card's content.",
+                currentCandidate: {
+                    name: "name",
+                    gender: "gender",
+                    age: "age",
+                    location: "location",
+                    description: "Some quick example text to build on the card title and make up the bulk of the card's content.",
+                },
                 loading: true,
                 loadingError: false,
                 voteError: false
@@ -34,13 +54,13 @@
                 formData.append('id', this.id);
                 this.axios.post('/mm/like', formData)
                     .then(response => {
-                        if(response.data.status === 'ok') {
+                        if (response.data.status === 'ok') {
                             this.next();
-                        } else if(response.data.status === 'error') {
+                        } else if (response.data.status === 'error') {
                             this.voteError = true;
                         }
                     }).catch((error) => {
-                    if(error)
+                    if (error)
                         this.voteError = true;
                 });
             },
@@ -49,13 +69,13 @@
                 formData.append('id', this.id);
                 this.axios.post('/mm/dislike', formData)
                     .then(response => {
-                        if(response.data.status === 'ok') {
+                        if (response.data.status === 'ok') {
                             this.next();
-                        } else if(response.data.status === 'error') {
+                        } else if (response.data.status === 'error') {
                             this.voteError = true;
                         }
                     }).catch((error) => {
-                    if(error)
+                    if (error)
                         this.voteError = true;
                 });
             },
@@ -64,26 +84,26 @@
                 this.loading = true;
                 this.axios.get('/mm/next')
                     .then(response => {
-                        if(response.data.status === 'ok') {
+                        if (response.data.status === 'ok') {
                             const profile = response.data.content[0];
-                            this.id = profile.id;
-                            this.name = profile.name;
-                            this.gender = profile.gender;
-                            this.age = profile.age;
-                            this.location = profile.location;
-                            this.description = profile.description;
-                        } else if(response.data.status === 'error') {
+                            this.currentCandidate.id = profile.id;
+                            this.currentCandidate.name = profile.name;
+                            this.currentCandidate.gender = profile.gender;
+                            this.currentCandidate.age = profile.age;
+                            this.currentCandidate.location = profile.location;
+                            this.currentCandidate.description = profile.description;
+                        } else if (response.data.status === 'error') {
                             this.loadingError = true;
                         }
                     }).catch((error) => {
-                    if(error)
+                    if (error)
                         this.loadingError = true;
                 });
                 this.loading = false;
             }
         },
-        created: function() {
-            if(!this.$store.getters.token) {
+        created: function () {
+            if (!this.$store.getters.token) {
                 this.$router.replace('/');
                 return;
             }

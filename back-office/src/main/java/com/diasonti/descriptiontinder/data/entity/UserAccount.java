@@ -189,4 +189,13 @@ public class UserAccount extends BaseEntity {
         this.setAgePreferenceMin(form.getAgePreferenceMin());
         this.setAgePreferenceMax(form.getAgePreferenceMax());
     }
+
+    @Override
+    public String toString() {
+        return "UserAccount{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
