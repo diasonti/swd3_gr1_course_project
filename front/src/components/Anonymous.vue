@@ -2,11 +2,14 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col"></div>
+            <div class="col-md-4"></div>
 
 
-            <div class="col" v-if="currentTab === 'login'">
+            <div class="col-md-4 text-center" v-if="currentTab === 'login'">
                 <h2>Sign in</h2>
+                <div class="alert alert-danger" role="alert" v-if="loginErrors.some(e => e === 'bad.credentials')">
+                    Wrong username and/or password.
+                </div>
                 <form>
                     <div class="form-group">
                         <label for="logInUsernameInput">Username</label>
@@ -18,42 +21,73 @@
                         <input v-model="logInPassword" type="password" class="form-control" id="logInPasswordInput"
                                placeholder="Enter password" @keyup.enter="submitLogIn">
                     </div>
-                    <button @click="submitLogIn" type="button" class="btn btn-primary">Sign in</button>
-                    <br/>
-                    <a @click="currentTab = 'register'" href="#">Don't have an account yet?</a>
+                    <button v-if="!loginInProgress" @click="submitLogIn" type="button" class="btn btn-primary">Sign in</button>
+                    <button v-if="loginInProgress" class="btn btn-primary" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                    <hr/>
+                    <a @click="currentTab = 'register'" href="#">I don't have an account</a>
                 </form>
             </div>
 
 
-            <div class="col" v-if="currentTab === 'register'">
+            <div class="col-md-4 text-center" v-if="currentTab === 'register'">
                 <h2>Sign up</h2>
-                <form>
+                <div class="alert alert-success" role="alert" v-if="registerSuccess">
+                    Successfully registered. You can <a href="#"
+                                                        @click="currentTab = 'login'; registerSuccess = false;">sign
+                    in</a> now.
+                </div>
+                <div class="alert alert-danger" role="alert" v-if="registerFailed">
+                    Something went wrong, please try again.
+                </div>
+                <form id="registerForm">
                     <div class="form-group">
                         <label for="registerUsernameInput">Username</label>
-                        <input v-model="registerUsername" type="text" class="form-control no-autocomplete" id="registerUsernameInput"
+                        <input v-model="registerUsername" type="text" class="form-control no-autocomplete"
+                               id="registerUsernameInput"
                                :class="{'is-invalid': registrationUsernameError}"
                                placeholder="Enter username" @keyup.enter="submitRegistration" readonly>
+                        <div class="invalid-feedback" v-if="registerErrors.some(e => e === 'username.length.error')">The
+                            username should be at least 1 symbol long
+                        </div>
+                        <div class="invalid-feedback" v-if="registerErrors.some(e => e === 'username.is.taken')">The
+                            username is already taken, try another one
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="registerPasswordInput1">Password</label>
-                        <input v-model="registerPassword1" type="password" class="form-control no-autocomplete" id="registerPasswordInput1"
+                        <input v-model="registerPassword1" type="password" class="form-control no-autocomplete"
+                               id="registerPasswordInput1"
                                :class="{'is-invalid': registrationPassword1Error}"
                                placeholder="Enter password" @keyup.enter="submitRegistration" readonly>
+                        <div class="invalid-feedback" v-if="registerErrors.some(e => e === 'password.too.weak')">The
+                            password should be at least 6 symbols long
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="registerPasswordInput2">Confirm password</label>
-                        <input v-model="registerPassword2" type="password" class="form-control no-autocomplete" id="registerPasswordInput2"
+                        <input v-model="registerPassword2" type="password" class="form-control no-autocomplete"
+                               id="registerPasswordInput2"
                                :class="{'is-invalid': registrationPassword2Error}"
                                placeholder="Enter password again" @keyup.enter="submitRegistration" readonly>
+                        <div class="invalid-feedback" v-if="registerErrors.some(e => e === 'passwords.not.match')">
+                            Passwords are not same
+                        </div>
                     </div>
-                    <button @click="submitRegistration" type="button" class="btn btn-primary">Sign up</button>
-                    <br/>
-                    <a @click="currentTab = 'login'" href="#">Already have an account?</a>
+                    <button v-if="!registerInProgress" @click="submitRegistration" type="button" class="btn btn-primary">Sign up</button>
+                    <button v-if="registerInProgress" class="btn btn-primary" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                    <hr/>
+                    <a @click="currentTab = 'login'" href="#">I already have an account</a>
                 </form>
             </div>
 
 
-            <div class="col"></div>
+            <div class="col-md-4"></div>
         </div>
     </div>
 </template>
@@ -65,42 +99,57 @@
         data() {
             return {
                 currentTab: 'login',
+
+
                 logInUsername: '',
                 logInPassword: '',
+
+                loginInProgress: false,
                 loginErrors: [],
+
+
                 registerUsername: '',
                 registerPassword1: '',
                 registerPassword2: '',
+
                 registerSuccess: false,
+                registerInProgress: false,
+                registerFailed: false,
+
                 registerErrors: []
             }
         },
         computed: {
-            registrationUsernameError () {
+            registrationUsernameError() {
                 const errors = ['username.length.error', 'username.is.taken'];
-                return this.registerErrors.some(r=> errors.includes(r));
+                return this.registerErrors.some(r => errors.includes(r));
             },
-            registrationPassword1Error () {
+            registrationPassword1Error() {
                 const errors = ['password.too.weak'];
-                return this.registerErrors.some(r=> errors.includes(r));
+                return this.registerErrors.some(r => errors.includes(r));
             },
-            registrationPassword2Error () {
+            registrationPassword2Error() {
                 const errors = ['passwords.not.match'];
-                return this.registerErrors.some(r=> errors.includes(r));
+                return this.registerErrors.some(r => errors.includes(r));
             }
         },
         methods: {
             submitLogIn() {
+                this.loginInProgress = true;
                 this.$store.dispatch('checkCredentials', {
                     username: this.logInUsername,
                     password: this.logInPassword,
                 }).then(() => {
+                    this.loginInProgress = false;
                     this.$router.push("profile");
-                }).catch(() => {
-                    this.logInFailed = true
+                }).catch((error) => {
+                    this.loginInProgress = false;
+                    if (error === 'bad.credentials')
+                        this.loginErrors = [error];
                 })
             },
             submitRegistration() {
+                this.registerInProgress = true;
                 this.registerSuccess = false;
                 const formData = new FormData();
                 formData.append('username', this.registerUsername);
@@ -108,26 +157,29 @@
                 formData.append('passwordVerification', this.registerPassword2);
                 this.axios.post('/registration/submit', formData)
                     .then(response => {
-                        if(response.data.status === 'ok') {
+                        this.registerInProgress = false;
+                        if (response.data.status === 'ok') {
                             this.registerSuccess = true;
-                        } else if(response.data.status === 'error') {
+                            this.registerErrors = [];
+                            $('#registerForm')[0].reset();
+                            this.registerFailed = false;
+                        } else if (response.data.status === 'error') {
                             this.registerErrors = response.data.content[0];
+                            this.registerFailed = false;
                         }
                     }).catch((error) => {
-                        if(error)
-                            this.registerFailed = true;
+                    this.registerInProgress = false;
+                    if (error)
+                        this.registerFailed = true;
                 });
-            },
-            hasSignupError(error) {
-                return this.registerErrors.includes(error);
             }
         },
-        created () {
-            if(this.$store.getters.token) {
+        created() {
+            if (this.$store.getters.token) {
                 this.$router.replace('/profile');
             }
         },
-        updated () {
+        updated() {
             this.$nextTick(function () {
                 $('input.no-autocomplete').removeAttr('readonly');
             })

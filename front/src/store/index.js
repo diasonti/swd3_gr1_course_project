@@ -46,7 +46,7 @@ const mutations = {
 
 const actions = {
     checkCredentials (context, auth) {
-        var formData = new FormData();
+        const formData = new FormData();
         formData.append('username', auth.username);
         formData.append('password', auth.password);
 
@@ -56,6 +56,9 @@ const actions = {
                     localStorage.setItem('auth_token', response.data.authToken);
                     context.commit('LOGIN_SUCCESS', response.data.authToken, response.data.userId);
                     context.commit('SET_USER_ID', response.data.userId);
+                } else {
+                    context.commit('LOGIN_FAILURE', "bad.credentials");
+                    throw "bad.credentials";
                 }
             }).catch((error) => {
                 context.commit('LOGIN_FAILURE', error);
