@@ -1,9 +1,8 @@
 <template>
     <header class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="brand-centered">
-            <router-link to="/" class="navbar-brand">DTinder</router-link>
+            <router-link to="/" class="navbar-brand"><img src="../assets/logo.png" height="25" width="25"/>DTinder</router-link>
         </div>
-
         <div class="navbar-collapse">
             <ul class="navbar-nav mr-auto">
             </ul>
