@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserAccountRepository extends CrudRepository<UserAccount, Long>, CustomUserAccountRepository {
+public interface UserAccountRepository extends CrudRepository<UserAccount, Long>, UserAccountRepositoryExtension {
 
     Optional<UserAccount> findByUsername(String username);
 

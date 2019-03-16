@@ -14,7 +14,7 @@ import javax.persistence.criteria.*;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class CustomUserAccountRepositoryImpl implements CustomUserAccountRepository {
+public class UserAccountRepositoryExtensionImpl implements UserAccountRepositoryExtension {
 
     @PersistenceContext
     private EntityManager entityManager;
