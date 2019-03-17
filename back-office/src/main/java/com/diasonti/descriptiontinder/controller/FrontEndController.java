@@ -1,5 +1,6 @@
 package com.diasonti.descriptiontinder.controller;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -11,10 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 
 @Controller
 public class FrontEndController {
@@ -74,8 +72,8 @@ public class FrontEndController {
     private String getFileContentString(final String path) {
         String content;
         try {
-            final File file = new ClassPathResource(path).getFile();
-            content = new String(Files.readAllBytes(file.toPath()), Charset.forName("UTF-8"));
+            final ClassPathResource resource = new ClassPathResource(path);
+            content = IOUtils.toString(resource.getInputStream(), "UTF-8");
         } catch (IOException e) {
             log.error("File loading error", e);
             content = null;
@@ -86,8 +84,8 @@ public class FrontEndController {
     private byte[] getFileContentBytes(final String path) {
         byte[] bytes;
         try {
-            final File file = new ClassPathResource(path).getFile();
-            bytes = Files.readAllBytes(file.toPath());
+            final ClassPathResource resource = new ClassPathResource(path);
+            bytes = IOUtils.toByteArray(resource.getInputStream());
         } catch (IOException e) {
             log.error("File loading error", e);
             bytes = null;
