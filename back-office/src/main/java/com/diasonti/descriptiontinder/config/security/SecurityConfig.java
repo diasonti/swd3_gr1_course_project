@@ -27,10 +27,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors()
                 .and().csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/", "/js/**", "/css/**", "/image/**", "/test/**").permitAll()
                     .antMatchers("/api/auth/**", "/api/registration/**").permitAll()
                     .antMatchers("/api/**").authenticated()
-                    .anyRequest().denyAll()
+                    .antMatchers("/js/**", "/css/**", "/img/**", "/favicon.ico", "/test/**").permitAll()
+                    .antMatchers("/**").permitAll()
                 .and().httpBasic().authenticationEntryPoint(apiBasicAuthenticationEntryPoint())
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         ;
