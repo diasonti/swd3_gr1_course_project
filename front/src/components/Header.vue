@@ -1,16 +1,26 @@
 <template>
-    <header class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="brand-centered">
-            <router-link to="/" class="navbar-brand"><img src="../assets/logo.png" height="25" width="25"/>DTinder</router-link>
-        </div>
-        <div class="navbar-collapse">
-            <ul class="navbar-nav mr-auto">
+    <nav class="navbar navbar-fixed-top navbar-expand-sm navbar-light bg-light">
+        <router-link tag="div" to="/" class="navbar-brand nav-justified"><a><img src="../assets/logo.png" height="25" width="25"/>DTinder</a></router-link>
+        <button v-if="authenticated" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div v-if="authenticated" class="navbar-collapse collapse justify-content-center" id="collapsingNavbar">
+            <ul class="navbar-nav text-center">
+                <router-link tag="li" to="/profile" active-class="active" class="nav-item">
+                    <a class="nav-link">Profile</a>
+                </router-link>
+                <router-link tag="li" to="/matchmaking" active-class="active" class="nav-item">
+                    <a class="nav-link">Matchmaking</a>
+                </router-link>
+                <router-link tag="li" to="/chat" active-class="active" class="nav-item">
+                    <a class="nav-link">Chat</a>
+                </router-link>
+                <li class="nav-item bg-warning logout">
+                    <a @click="logOut" href="#" class="nav-link">Log out</a>
+                </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <button v-if="authenticated" @click="logOut" type="button" class="btn btn-primary" id="logOutButton">Log out</button>
-            </form>
         </div>
-    </header>
+    </nav>
 </template>
 
 <script>
@@ -35,27 +45,20 @@
 </script>
 
 <style scoped>
-    header {
-        height: 50px;
+    .nav-item {
+        min-width: 100px;
+        border-radius: 10px;
     }
 
-    .brand-centered {
-        display: flex;
-        justify-content: center;
-        position: absolute;
-        width: 100%;
-        left: 0;
-        top: 0;
-        z-index: 1;
+    .nav-item:hover {
+        background-color: #17a2b8 !important;
+        transition: background-color;
+        transition-duration: 200ms;
     }
 
-    .brand-centered .navbar-brand {
-        display: flex;
-        align-items: center;
+    .logout:hover {
+        background-color: #dc3545 !important;
+        transition: background-color;
+        transition-duration: 200ms;
     }
-
-    #logOutButton {
-        z-index: 2;
-    }
-
 </style>
