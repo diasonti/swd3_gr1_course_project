@@ -5,15 +5,11 @@ import router from '@/router'
 import store from '@/store'
 import '@/api'
 
-import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap-vue/dist/bootstrap-vue.min.css'
 
 window.$ = require('jquery');
 window.JQuery = require('jquery');
-
-Vue.use(BootstrapVue);
 
 Vue.config.productionTip = false;
 
