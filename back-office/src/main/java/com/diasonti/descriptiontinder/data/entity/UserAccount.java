@@ -190,6 +190,19 @@ public class UserAccount extends BaseEntity {
         this.setAgePreferenceMax(form.getAgePreferenceMax());
     }
 
+    @Transient
+    public boolean isProfileFilled() {
+        if(name == null || name.isEmpty()) return false;
+        if(gender == null) return false;
+        if(age == null || age >= 18) return false;
+        if(location == null || location.isEmpty()) return false;
+        if(description == null || description.isEmpty()) return false;
+        if(genderPreference == null) return false;
+        if(agePreferenceMin == null || agePreferenceMin < 18) return false;
+        if(agePreferenceMax == null || agePreferenceMax < agePreferenceMin) return false;
+        return true;
+    }
+
     @Override
     public String toString() {
         return "UserAccount{" +

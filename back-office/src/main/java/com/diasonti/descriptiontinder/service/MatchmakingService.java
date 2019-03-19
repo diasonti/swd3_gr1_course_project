@@ -9,6 +9,9 @@ import com.diasonti.descriptiontinder.data.form.ChatMessageForm;
 import com.diasonti.descriptiontinder.data.form.MmMatchForm;
 import com.diasonti.descriptiontinder.data.form.UserProfileForm;
 import com.diasonti.descriptiontinder.repository.*;
+import com.diasonti.descriptiontinder.service.exceptions.MatchmakingException;
+import com.diasonti.descriptiontinder.service.exceptions.NoCandidateException;
+import com.diasonti.descriptiontinder.service.exceptions.ProfileNotFilledException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -38,14 +41,15 @@ public class MatchmakingService {
     }
 
     @Transactional(readOnly = true)
-    public UserProfileForm getNextCandidate(Long sourceUserId) {
+    public UserProfileForm getNextCandidate(Long sourceUserId) throws MatchmakingException {
         final UserAccount source = userAccountRepository.findById(sourceUserId).orElse(null);
-        if (source == null)
-            return null;
+        if(!source.isProfileFilled()) {
+            throw new ProfileNotFilledException();
+        }
         final UserAccount candidate = userAccountRepository.findNextMatchmakingCandidate(sourceUserId,
                 source.getGenderPreference(), source.getAgePreferenceMin(), source.getAgePreferenceMax(), -1).orElse(null);
         if (candidate == null)
-            return null;
+            throw new NoCandidateException();
         return UserProfileForm.of(candidate);
     }
 

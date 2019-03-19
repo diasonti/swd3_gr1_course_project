@@ -1,9 +1,9 @@
 package com.diasonti.descriptiontinder.controller.api;
 
 import com.diasonti.descriptiontinder.data.entity.UserAccount;
-import com.diasonti.descriptiontinder.data.form.UserProfileForm;
 import com.diasonti.descriptiontinder.data.util.RestMessage;
 import com.diasonti.descriptiontinder.service.MatchmakingService;
+import com.diasonti.descriptiontinder.service.exceptions.MatchmakingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,11 +20,10 @@ public class MatchmakingController {
 
     @GetMapping("/next")
     public RestMessage nextCandidate(UserAccount user) {
-        final UserProfileForm candidate = matchmakingService.getNextCandidate(user.getId());
-        if(candidate != null) {
-            return RestMessage.ok(candidate);
-        } else {
-            return RestMessage.error("no.candidate.available");
+        try {
+            return RestMessage.ok(matchmakingService.getNextCandidate(user.getId()));
+        } catch (MatchmakingException e) {
+            return RestMessage.error(e.getMessage());
         }
     }
 
