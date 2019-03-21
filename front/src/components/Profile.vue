@@ -140,9 +140,9 @@
             saveMmPreferences() {
                 this.status.mmPref.save = this.inProgress;
                 const formData = new FormData();
-                formData.append('gender', this.mmPref.gender);
-                formData.append('ageMin', this.mmPref.ageMin);
-                formData.append('ageMax', this.mmPref.ageMax);
+                formData.append('genderPreference', this.mmPref.gender);
+                formData.append('agePreferenceMin', this.mmPref.ageMin);
+                formData.append('agePreferenceMax', this.mmPref.ageMax);
                 this.axios.post('/profile/pref', formData)
                     .then(response => {
                         if (response.data.status === 'ok') {

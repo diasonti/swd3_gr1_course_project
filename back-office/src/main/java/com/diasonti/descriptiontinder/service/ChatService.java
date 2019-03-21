@@ -34,7 +34,7 @@ public class ChatService {
     @Transactional(readOnly = true)
     public List<ChatMessageForm> getMessages(Long matchId, int from, int to) {
         final MmMatch match = matchRepository.findById(matchId).orElse(null);
-        if(match == null || !match.hasUserWithId(UserAccountHolder.getCurrentUser().getId()))
+        if(match == null || !match.hasUserWithId(UserAccountHolder.getCurrentUserId()))
             return Collections.emptyList();
         final int size = to - from;
         final int page = from / size;

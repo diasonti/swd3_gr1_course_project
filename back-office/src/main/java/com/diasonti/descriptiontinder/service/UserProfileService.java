@@ -31,21 +31,11 @@ public class UserProfileService {
 
     @Transactional
     public void updateUserProfile(UserProfileForm form) {
-        final Long currentUserId = UserAccountHolder.getCurrentUser().getId();
-        final UserAccount currentUser = userAccountRepository.findById(currentUserId).orElse(null);
-        if (currentUser != null) {
-            currentUser.updateWithForm(form);
-            userAccountRepository.save(currentUser);
-        }
+        userAccountRepository.findById(UserAccountHolder.getCurrentUserId()).ifPresent(user -> user.updateWithForm(form));
     }
 
     @Transactional
     public void updateMatchmakingPreferences(MmPreferenceForm form) {
-        final Long currentUserId = UserAccountHolder.getCurrentUser().getId();
-        final UserAccount currentUser = userAccountRepository.findById(currentUserId).orElse(null);
-        if (currentUser != null) {
-            currentUser.updateWithForm(form);
-            userAccountRepository.save(currentUser);
-        }
+        userAccountRepository.findById(UserAccountHolder.getCurrentUserId()).ifPresent(user -> user.updateWithForm(form));
     }
 }

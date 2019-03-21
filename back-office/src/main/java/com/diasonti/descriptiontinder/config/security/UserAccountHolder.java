@@ -17,4 +17,9 @@ public class UserAccountHolder {
         return userAccount;
     }
 
+    public static Long getCurrentUserId() {
+        final UserAccount user = UserAccountHolder.getCurrentUser();
+        return user != null ? user.getId() : null;
+    }
+
 }
