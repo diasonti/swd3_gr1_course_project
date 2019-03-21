@@ -6,14 +6,6 @@
                     <div class="recent_heading">
                         <h4>Chats list</h4>
                     </div>
-                    <!--<div class="srch_bar">-->
-                    <!--<div class="stylish-input-group">-->
-                    <!--<input type="text" class="search-bar" placeholder="Search">-->
-                    <!--<span class="input-group-addon">-->
-                    <!--<button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>-->
-                    <!--</span>-->
-                    <!--</div>-->
-                    <!--</div>-->
                 </div>
                 <div class="inbox_chat">
 
@@ -25,61 +17,23 @@
                             </div>
                         </div>
                     </div>
-                    <!--
-                                        <div class="chat_list active_chat">
-                                            <div class="chat_people">
-                                                <div class="chat_img"><img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"></div>
-                                                <div class="chat_ib">
-                                                    <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
-                                                    <p>Test, which is a new approach to have all solutions
-                                                        astrology under one roof.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="chat_list">
-                                            <div class="chat_people">
-                                                <div class="chat_img"><img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"></div>
-                                                <div class="chat_ib">
-                                                    <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
-                                                    <p>Test, which is a new approach to have all solutions
-                                                        astrology under one roof.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                    -->
                 </div>
             </div>
             <div class="mesgs">
                 <div class="msg_history">
-                    <div v-for="msg in activeChatMessages" :key="msg.id" :class="{ 'outgoing_msg': isMsgSent(msg), 'incoming_msg': !isMsgSent(msg) }">
-                        <div :class="{ 'sent_msg': isMsgSent(msg), 'received_msg': !isMsgSent(msg) }">
-                            <div :class="{ 'received_withd_msg': !isMsgSent(msg) }">
+                    <div v-for="msg in activeChatMessages" :key="msg.id"
+                         :class="{ 'outgoing_msg': msg.mine, 'incoming_msg': !msg.mine }">
+                        <div :class="{ 'sent_msg': msg.mine, 'received_msg': !msg.mine }">
+                            <div :class="{ 'received_withd_msg': !msg.mine }">
                                 <p>{{msg.text}}</p>
                                 <span class="time_date">{{msg.sentAt}}</span>
                             </div>
                         </div>
                     </div>
-
-                    <!--<div class="incoming_msg">-->
-                        <!--<div class="received_msg">-->
-                            <!--<div class="received_withd_msg">-->
-                                <!--<p>Test which is a new approach to have all-->
-                                    <!--solutions</p>-->
-                                <!--<span class="time_date"> 11:01 AM    |    June 9</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="outgoing_msg">-->
-                        <!--<div class="sent_msg">-->
-                            <!--<p>Test which is a new approach to have all-->
-                                <!--solutions</p>-->
-                            <!--<span class="time_date"> 11:01 AM    |    June 9</span></div>-->
-                    <!--</div>-->
                 </div>
                 <div class="type_msg" v-if="activeChat != null">
                     <div class="input_msg_write">
-                        <input v-model.trim="newChatMsgText" type="text" class="write_msg"
+                        <input v-model.trim="newMessageText" type="text" class="write_msg"
                                placeholder="Type a message"/>
                         <button @click="sendMsg" class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o"
                                                                                        aria-hidden="true"></i></button>
@@ -87,7 +41,6 @@
                 </div>
             </div>
         </div>
-        <!--<p class="text-center top_spac"> Design by <a target="_blank" href="https://bootsnipp.com/snippets/1ea0N">Sunil Rajput</a></p>-->
     </div>
 </template>
 
@@ -96,31 +49,40 @@
         name: "ChatList",
         data() {
             return {
-                currentUserId: null,
                 chatList: [],
                 activeChat: null,
                 activeChatMessages: [],
-                newChatMsgText: ''
+
+                loading: 'loading',
+                loaded: 'loaded',
+                error: 'error',
+
+                listStatus: 'loading',
+                chatStatus: 'loading',
+                errorCode: null,
+
+                newMessageText: '',
+                newMessageStatus: 'loaded',
             }
         },
         methods: {
             loadChatsList() {
+                this.listStatus = this.loading;
                 this.axios.get('/chat/list')
                     .then(response => {
                         if (response.data.status === 'ok') {
-                            // console.log('/chat/list - success');
-                            // console.log(response.data)
                             this.chatList = response.data.content[0];
+                            this.listStatus = this.loaded;
                         } else if (response.data.status === 'error') {
-                            // console.log('/chat/list - error');
-                            // console.log(response.data)
+                            this.listStatus = this.error;
+                            this.errorCode = response.data.content[0];
                         }
                     }).catch((error) => {
-                    // console.log('/chat/list - fail');
-                    // console.log(error)
+                    this.listStatus = this.error;
                 });
             },
             loadChat(chat) {
+                this.chatStatus = this.loading;
                 const context = this;
                 this.activeChat = chat;
                 this.axios.get('/chat/get', {
@@ -129,51 +91,44 @@
                         from: 0,
                         to: 10
                     }
-                })
-                    .then(response => {
+                }).then(response => {
                         if (response.data.status === 'ok') {
-                            console.log('/chat/get - success');
-                            console.log(response.data)
-                            context.activeChatMessages = response.data.content[0]
+                            context.activeChatMessages = response.data.content[0];
+                            context.chatStatus = this.loaded;
                         } else if (response.data.status === 'error') {
-                            console.log('/chat/get - error');
-                            console.log(response.data)
+                            context.chatStatus = this.error;
+                            context.errorCode = response.data.content[0];
                         }
                     }).catch((error) => {
-                    console.log('/chat/get - fail');
-                    console.log(error)
+                    context.chatStatus = this.error;
                 });
             },
             sendMsg() {
+                this.newMessageStatus = this.loading;
                 const context = this;
                 const formData = new FormData();
                 formData.append('matchId', this.activeChat.id);
-                formData.append('text', this.newChatMsgText);
+                formData.append('text', this.newMessageText);
                 this.axios.post('/chat/send', formData)
                     .then(response => {
                         if (response.data.status === 'ok') {
-                            context.newChatMsgText = "";
+                            context.newMessageText = "";
+                            context.newMessageStatus = this.loaded;
                             context.loadChat(this.activeChat);
                         } else if (response.data.status === 'error') {
-
+                            context.newMessageStatus = this.error;
+                            context.errorCode = response.data.content[0];
                         }
                     }).catch((error) => {
-
+                    context.newMessageStatus = this.error;
                 });
-            },
-            isMsgSent(msg) {
-                console.log(msg)
-                console.log(msg.sender.id)
-                console.log(this.currentUserId)
-                return msg.sender.id == this.currentUserId;
             }
         },
-        created: function () {
+        mounted() {
             if (!this.$store.getters.token) {
                 this.$router.replace('/');
                 return;
             }
-            this.currentUserId = this.$store.getters.userId;
             this.loadChatsList();
         }
     }

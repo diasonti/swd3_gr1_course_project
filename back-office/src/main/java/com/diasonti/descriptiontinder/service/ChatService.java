@@ -33,13 +33,18 @@ public class ChatService {
 
     @Transactional(readOnly = true)
     public List<ChatMessageForm> getMessages(Long matchId, int from, int to) {
+        final Long currentUserId = UserAccountHolder.getCurrentUserId();
         final MmMatch match = matchRepository.findById(matchId).orElse(null);
-        if(match == null || !match.hasUserWithId(UserAccountHolder.getCurrentUserId()))
+        if(match == null || !match.hasUserWithId(currentUserId))
             return Collections.emptyList();
         final int size = to - from;
         final int page = from / size;
-        final List<ChatMessage> messages = chatMessageRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Order.desc("sentAt")))).getContent();
-        return messages.stream().map(ChatMessageForm::of).collect(Collectors.toList());
+        final List<ChatMessage> messages = chatMessageRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Order.asc("sentAt")))).getContent();
+        return messages.stream().map(message -> {
+            ChatMessageForm form = ChatMessageForm.of(message);
+            form.setMine(form.getSender().getId().equals(currentUserId));
+            return form;
+        }).collect(Collectors.toList());
     }
 
     @Transactional

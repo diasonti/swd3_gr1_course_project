@@ -38,7 +38,7 @@ public class AfterMatchController {
     }
 
     @PostMapping("/chat/send")
-    public RestMessage getMatches(@RequestParam Long matchId, @RequestParam String text) {
+    public RestMessage sendMessage(@RequestParam Long matchId, @RequestParam String text) {
         final boolean isSuccess = chatService.saveMessage(matchId, text);
         if(isSuccess)
             return RestMessage.ok();

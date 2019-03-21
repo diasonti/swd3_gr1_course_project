@@ -2,7 +2,7 @@ package com.diasonti.descriptiontinder.data.form;
 
 import com.diasonti.descriptiontinder.data.entity.ChatMessage;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ChatMessageForm extends BaseForm {
 
@@ -10,9 +10,11 @@ public class ChatMessageForm extends BaseForm {
 
     private UserProfileForm receiver;
 
-    private LocalDateTime sentAt;
+    private String sentAt;
 
     private String text;
+
+    private boolean mine;
 
     public static ChatMessageForm of(ChatMessage message) {
         ChatMessageForm form = null;
@@ -21,7 +23,7 @@ public class ChatMessageForm extends BaseForm {
             form.setId(message.getId());
             form.setSender(UserProfileForm.of(message.getSender()));
             form.setReceiver(UserProfileForm.of(message.getReceiver()));
-            form.setSentAt(message.getSentAt());
+            form.setSentAt(message.getSentAt().format(DateTimeFormatter.ofPattern("dd.MM.yy HH:mm")));
             form.setText(message.getText());
         }
         return form;
@@ -43,11 +45,11 @@ public class ChatMessageForm extends BaseForm {
         this.receiver = receiver;
     }
 
-    public LocalDateTime getSentAt() {
+    public String getSentAt() {
         return sentAt;
     }
 
-    public void setSentAt(LocalDateTime sentAt) {
+    public void setSentAt(String sentAt) {
         this.sentAt = sentAt;
     }
 
@@ -57,5 +59,13 @@ public class ChatMessageForm extends BaseForm {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public boolean isMine() {
+        return mine;
+    }
+
+    public void setMine(boolean mine) {
+        this.mine = mine;
     }
 }
