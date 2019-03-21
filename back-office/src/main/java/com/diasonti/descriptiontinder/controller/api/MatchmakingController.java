@@ -29,16 +29,23 @@ public class MatchmakingController {
 
     @PostMapping("/like")
     public RestMessage like(UserAccount user, @RequestParam(name = "id") Long candidateId) {
-        if (matchmakingService.saveLike(user.getId(), candidateId)) {
+        try {
+            matchmakingService.saveLike(user.getId(), candidateId);
             matchmakingService.checkAndSaveMatch(user.getId(), candidateId);
+            return RestMessage.ok();
+        } catch (MatchmakingException e) {
+            return RestMessage.error(e.getMessage());
         }
-        return RestMessage.ok();
     }
 
     @PostMapping("/dislike")
     public RestMessage dislike(UserAccount user, @RequestParam(name = "id") Long candidateId) {
-        matchmakingService.saveDislike(user.getId(), candidateId);
-        return RestMessage.ok();
+        try {
+            matchmakingService.saveDislike(user.getId(), candidateId);
+            return RestMessage.ok();
+        } catch (MatchmakingException e) {
+            return RestMessage.error(e.getMessage());
+        }
     }
 
 }

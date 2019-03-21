@@ -62,6 +62,10 @@ public class UserAccount extends BaseEntity {
     @Column(name = "age_preference_max")
     private Integer agePreferenceMax;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "last_candidate_id")
+    private UserAccount lastCandidate;
+
     public String getUsername() {
         return username;
     }
@@ -172,6 +176,14 @@ public class UserAccount extends BaseEntity {
 
     public void setAgePreferenceMax(Integer agePreferenceMax) {
         this.agePreferenceMax = agePreferenceMax;
+    }
+
+    public UserAccount getLastCandidate() {
+        return lastCandidate;
+    }
+
+    public void setLastCandidate(UserAccount lastCandidate) {
+        this.lastCandidate = lastCandidate;
     }
 
     @Transient

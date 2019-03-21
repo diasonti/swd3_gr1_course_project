@@ -9,6 +9,7 @@ import com.diasonti.descriptiontinder.data.form.ChatMessageForm;
 import com.diasonti.descriptiontinder.data.form.MmMatchForm;
 import com.diasonti.descriptiontinder.data.form.UserProfileForm;
 import com.diasonti.descriptiontinder.repository.*;
+import com.diasonti.descriptiontinder.service.exceptions.IllegalVoteException;
 import com.diasonti.descriptiontinder.service.exceptions.MatchmakingException;
 import com.diasonti.descriptiontinder.service.exceptions.NoCandidateException;
 import com.diasonti.descriptiontinder.service.exceptions.ProfileNotFilledException;
@@ -40,66 +41,62 @@ public class MatchmakingService {
         this.chatMessageRepository = chatMessageRepository;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public UserProfileForm getNextCandidate(Long sourceUserId) throws MatchmakingException {
-        final UserAccount source = userAccountRepository.findById(sourceUserId).orElse(null);
+        final UserAccount source = userAccountRepository.findById(sourceUserId).orElseThrow(() -> new RuntimeException("UserAccount not found"));
+
+        if(source.getLastCandidate() != null) {
+            return UserProfileForm.of(source.getLastCandidate());
+        }
+
         if(!source.isProfileFilled()) {
             throw new ProfileNotFilledException();
         }
         final UserAccount candidate = userAccountRepository.findNextMatchmakingCandidate(sourceUserId,
-                source.getGenderPreference(), source.getAgePreferenceMin(), source.getAgePreferenceMax(), -1).orElse(null);
-        if (candidate == null)
-            throw new NoCandidateException();
+                source.getGenderPreference(), source.getAgePreferenceMin(), source.getAgePreferenceMax(), -1)
+                .orElseThrow(NoCandidateException::new);
+        source.setLastCandidate(candidate);
         return UserProfileForm.of(candidate);
     }
 
     @Transactional
-    public boolean saveLike(Long sourceUserId, Long targetUserId) {
-        return saveChoice(sourceUserId, targetUserId, MatchmakingDecision.LIKE);
+    public void saveLike(Long sourceUserId, Long targetUserId) throws MatchmakingException {
+        saveChoice(sourceUserId, targetUserId, MatchmakingDecision.LIKE);
     }
 
     @Transactional
-    public boolean saveDislike(Long sourceUserId, Long targetUserId) {
-        return saveChoice(sourceUserId, targetUserId, MatchmakingDecision.DISLIKE);
+    public void saveDislike(Long sourceUserId, Long targetUserId) throws MatchmakingException {
+        saveChoice(sourceUserId, targetUserId, MatchmakingDecision.DISLIKE);
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
-    protected boolean saveChoice(Long sourceUserId, Long targetUserId, MatchmakingDecision decision) {
-        final UserAccount source = userAccountRepository.findById(sourceUserId).orElse(null);
-        final UserAccount target = userAccountRepository.findById(targetUserId).orElse(null);
-        if (source != null && target != null && !choiceRepository.existsBySourceAndTarget(source, target)) {
-            MmChoice choice = new MmChoice();
+    protected void saveChoice(Long sourceUserId, Long targetUserId, MatchmakingDecision decision) throws MatchmakingException {
+        final UserAccount source = userAccountRepository.findById(sourceUserId).orElseThrow(() -> new RuntimeException("UserAccount not found"));
+        final UserAccount target = source.getLastCandidate();
+        if(target == null || !target.getId().equals(targetUserId)) {
+            throw new IllegalVoteException();
+        }
+        if (!choiceRepository.existsBySourceAndTarget(source, target)) {
+            final MmChoice choice = new MmChoice();
             choice.setSource(source);
             choice.setTarget(target);
             choice.setDecision(decision);
             choiceRepository.save(choice);
-            return true;
+
+            source.setLastCandidate(null);
         }
-        return false;
     }
 
     @Transactional
     public void checkAndSaveMatch(Long sourceUserId, Long targetUserId) {
-        final UserAccount source = userAccountRepository.findById(sourceUserId).orElse(null);
-        final UserAccount target = userAccountRepository.findById(targetUserId).orElse(null);
-        if (source == null || target == null)
-            return;
+        final UserAccount source = userAccountRepository.findById(sourceUserId).orElseThrow(() -> new RuntimeException("UserAccount not found"));
+        final UserAccount target = userAccountRepository.findById(targetUserId).orElseThrow(() -> new RuntimeException("UserAccount not found"));
         final MmChoice sourceChoice = choiceRepository.findBySourceAndTargetAndDecision(source, target, MatchmakingDecision.LIKE).orElse(null);
+        if(sourceChoice == null) return;
         final MmChoice targetChoice = choiceRepository.findBySourceAndTargetAndDecision(target, source, MatchmakingDecision.LIKE).orElse(null);
-        if (sourceChoice == null || targetChoice == null)
-            return;
+        if(targetChoice == null) return;
         final MmMatch match = new MmMatch(sourceChoice, targetChoice);
         matchRepository.save(match);
-    }
-
-    @Transactional(readOnly = true)
-    public boolean isMatched(Long firstUserId, Long secondUserId) {
-        final UserAccount first = userAccountRepository.findById(firstUserId).orElse(null);
-        final UserAccount second = userAccountRepository.findById(secondUserId).orElse(null);
-        if (first == null || second == null)
-            return false;
-        final MmMatch match = matchRepository.findByFirstUserAndSecondUser(first, second).orElse(null);
-        return match != null;
     }
 
     @Transactional(readOnly = true)
