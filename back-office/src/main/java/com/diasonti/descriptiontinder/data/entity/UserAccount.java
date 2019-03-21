@@ -194,7 +194,7 @@ public class UserAccount extends BaseEntity {
     public boolean isProfileFilled() {
         if(name == null || name.isEmpty()) return false;
         if(gender == null) return false;
-        if(age == null || age >= 18) return false;
+        if(age == null || age < 18) return false;
         if(location == null || location.isEmpty()) return false;
         if(description == null || description.isEmpty()) return false;
         if(genderPreference == null) return false;

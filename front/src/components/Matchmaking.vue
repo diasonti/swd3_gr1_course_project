@@ -1,32 +1,76 @@
 <template>
 
-    <div class="container-fluid">
-        <div class="col-3"></div>
-        <div class="col-6">
-            <div class="card">
-                <div class="card-header">What about this one?</div>
-                <div class="card-body">
-                    <p>Name: {{currentCandidate.name}}</p>
-                    <p>Age: {{currentCandidate.age}}</p>
-                    <p>Gender: {{currentCandidate.gender}}</p>
-                    <p>From: {{currentCandidate.location}}</p>
-                    <p>From: {{currentCandidate.description}}</p>
+    <div class="container-fluid mt-3">
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
+
+                <div class="alert alert-danger" role="alert" v-if="status === error && errorCode === null">
+                    Something's not right. Try reloading the page.
                 </div>
-                <div class="card-footer">
-                    <div class="container-fluid">
+
+                <div class="alert alert-warning" role="alert" v-if="errorCode === 'profile.not.filled'">
+                    You must fill your
+                    <router-link to="/profile" class="alert-link">profile</router-link>
+                    first.
+                </div>
+
+                <div class="alert alert-warning" role="alert" v-if="errorCode === 'no.candidate.available'">
+                    No suitable candidates found. Try again later or change your
+                    <router-link to="/profile" class="alert-link">search preferences</router-link>
+                    .
+                </div>
+
+                <div class="card" v-if="status === loading">
+                    <div class="card-header text-center">Loading next candidate...</div>
+                    <div class="card-body">
+                        <div class="text-center">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
                         <div class="row">
-                            <div class="col">
-                                <button @click="like" type="button" class="btn btn-success">Like</button>
-                            </div>
-                            <div class="col">
-                                <button @click="dislike" type="button" class="btn btn-danger">Dislike</button>
-                            </div>
+                            <div class="col-sm-1"></div>
+                            <button type="button" class="col-sm btn btn-success" disabled>
+                                <div class="spinner-border spinner-border-sm" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </button>
+                            <div class="col-sm-1">&nbsp;</div>
+                            <button type="button" class="col-sm btn btn-danger" disabled>
+                                <div class="spinner-border spinner-border-sm" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </button>
+                            <div class="col-sm-1"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" v-if="status === loaded">
+                    <div class="card-header text-center">What about this one?</div>
+                    <div class="card-body">
+                        <p>Name: {{currentCandidate.name}}</p>
+                        <p>Age: {{currentCandidate.age}}</p>
+                        <p>Gender: {{currentCandidate.gender}}</p>
+                        <p>From: {{currentCandidate.location}}</p>
+                        <p>From: {{currentCandidate.description}}</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-sm-1"></div>
+                            <button @click="like" type="button" class="col-sm btn btn-success">Like</button>
+                            <div class="col-sm-1">&nbsp;</div>
+                            <button @click="dislike" type="button" class="col-sm btn btn-danger">Dislike</button>
+                            <div class="col-sm-1"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-3"></div>
+        <div class="col-sm-3"></div>
     </div>
 </template>
 
@@ -43,13 +87,18 @@
                     location: "location",
                     description: "Some quick example text to build on the card title and make up the bulk of the card's content.",
                 },
-                loading: true,
-                loadingError: false,
-                voteError: false
+
+                loading: "loading",
+                loaded: "loaded",
+                error: "error",
+
+                status: "loading",
+                errorCode: null
             }
         },
         methods: {
             like() {
+                this.status = this.loading;
                 const formData = new FormData();
                 formData.append('id', this.id);
                 this.axios.post('/mm/like', formData)
@@ -57,14 +106,16 @@
                         if (response.data.status === 'ok') {
                             this.next();
                         } else if (response.data.status === 'error') {
-                            this.voteError = true;
+                            this.status = this.error;
+                            this.errorCode = response.data.content[0];
                         }
                     }).catch((error) => {
-                    if (error)
-                        this.voteError = true;
+                    this.status = this.error;
+                    this.errorCode = null;
                 });
             },
             dislike() {
+                this.status = this.loading;
                 const formData = new FormData();
                 formData.append('id', this.id);
                 this.axios.post('/mm/dislike', formData)
@@ -72,32 +123,31 @@
                         if (response.data.status === 'ok') {
                             this.next();
                         } else if (response.data.status === 'error') {
-                            this.voteError = true;
+                            this.status = this.error;
+                            this.errorCode = response.data.content[0];
                         }
                     }).catch((error) => {
-                    if (error)
-                        this.voteError = true;
+                    this.status = this.error;
+                    this.errorCode = null;
                 });
             },
             next() {
-                this.loadingError = false;
-                this.loading = true;
+                this.status = this.loading;
+                this.errorCode = null;
                 this.axios.get('/mm/next')
                     .then(response => {
                         if (response.data.status === 'ok') {
-                            const profile = response.data.content[0];
-                            this.currentCandidate.id = profile.id;
-                            this.currentCandidate.name = profile.name;
-                            this.currentCandidate.gender = profile.gender;
-                            this.currentCandidate.age = profile.age;
-                            this.currentCandidate.location = profile.location;
-                            this.currentCandidate.description = profile.description;
+                            this.currentCandidate = response.data.content[0];
+                            this.status = this.loaded;
                         } else if (response.data.status === 'error') {
-                            this.loadingError = true;
+                            this.status = this.error;
+                            this.errorCode = response.data.content[0];
+                            this.currentCandidate = null;
                         }
                     }).catch((error) => {
-                    if (error)
-                        this.loadingError = true;
+                    this.status = this.error;
+                    this.errorCode = null;
+                    this.currentCandidate = null;
                 });
                 this.loading = false;
             }
