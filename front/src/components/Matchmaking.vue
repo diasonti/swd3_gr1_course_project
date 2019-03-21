@@ -56,7 +56,7 @@
                         <p>Age: {{currentCandidate.age}}</p>
                         <p>Gender: {{currentCandidate.gender}}</p>
                         <p>From: {{currentCandidate.location}}</p>
-                        <p>From: {{currentCandidate.description}}</p>
+                        <p>Text: {{currentCandidate.description}}</p>
                     </div>
                     <div class="card-footer">
                         <div class="row">
@@ -79,8 +79,8 @@
         name: "Swiper",
         data() {
             return {
-                id: "",
                 currentCandidate: {
+                    id: "",
                     name: "name",
                     gender: "gender",
                     age: "age",
@@ -100,7 +100,7 @@
             like() {
                 this.status = this.loading;
                 const formData = new FormData();
-                formData.append('id', this.id);
+                formData.append('id', this.currentCandidate.id);
                 this.axios.post('/mm/like', formData)
                     .then(response => {
                         if (response.data.status === 'ok') {
@@ -117,7 +117,7 @@
             dislike() {
                 this.status = this.loading;
                 const formData = new FormData();
-                formData.append('id', this.id);
+                formData.append('id', this.currentCandidate.id);
                 this.axios.post('/mm/dislike', formData)
                     .then(response => {
                         if (response.data.status === 'ok') {
