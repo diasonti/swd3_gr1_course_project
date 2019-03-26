@@ -41,6 +41,7 @@ public class UserAccountRepositoryExtensionImpl implements UserAccountRepository
         )));
 
         final TypedQuery<UserAccount> typedQuery = entityManager.createQuery(uaQuery);
+        typedQuery.setMaxResults(1);
         UserAccount result;
         try {
             result = typedQuery.getSingleResult();
