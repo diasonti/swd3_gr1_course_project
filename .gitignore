@@ -24,3 +24,6 @@ target/
 /nbdist/
 /.nb-gradle/
 /build/
+
+node_modules/
+dist/
