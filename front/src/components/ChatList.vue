@@ -1,50 +1,48 @@
 <template>
-    <!--<div class="container">-->
-        <div class="messaging">
-            <div class="inbox_msg">
-                <div class="inbox_people">
-                    <div class="headind_srch">
-                        <div class="recent_heading">
-                            <h4>Chats list</h4>
-                        </div>
-                    </div>
-                    <div class="inbox_chat">
-
-                        <div class="chat_list" v-for="chat in chatList" :key="chat.id" @click="loadChat(chat)">
-                            <div class="chat_people">
-                                <div class="chat_ib">
-                                    <h5>{{chat.matchedUser.name}} <span class="chat_date">{{chat.matchedAt}}</span></h5>
-                                    <p><span v-if="chat.lastMessage != null">{{chat.lastMessage.text}}</span></p>
-                                </div>
-                            </div>
-                        </div>
+    <div class="messaging">
+        <div class="inbox_msg">
+            <div class="inbox_people">
+                <div class="headind_srch">
+                    <div class="recent_heading">
+                        <h4>Chats list</h4>
                     </div>
                 </div>
-                <div class="mesgs">
-                    <div class="msg_history">
-                        <div v-for="msg in activeChatMessages" :key="msg.id"
-                             :class="{ 'outgoing_msg': msg.mine, 'incoming_msg': !msg.mine }">
-                            <div :class="{ 'sent_msg': msg.mine, 'received_msg': !msg.mine }">
-                                <div :class="{ 'received_withd_msg': !msg.mine }">
-                                    <p>{{msg.text}}</p>
-                                    <span class="time_date">{{msg.sentAt}}</span>
-                                </div>
+                <div class="inbox_chat">
+
+                    <div class="chat_list" v-for="chat in chatList" :key="chat.id" @click="activeChat = chat">
+                        <div class="chat_people">
+                            <div class="chat_ib">
+                                <h5>{{chat.matchedUser.name}} <span class="chat_date">{{chat.matchedAt}}</span></h5>
+                                <p><span v-if="chat.lastMessage != null">{{chat.lastMessage.text}}</span></p>
                             </div>
-                        </div>
-                    </div>
-                    <div class="type_msg" v-if="activeChat != null">
-                        <div class="input_msg_write">
-                            <input v-model.trim="newMessageText" type="text" class="write_msg"
-                                   placeholder="Type a message"/>
-                            <button @click="sendMsg" class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o"
-                                                                                           aria-hidden="true"></i>
-                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="mesgs">
+                <div class="msg_history">
+                    <div v-for="msg in activeChatMessages" :key="msg.id"
+                         :class="{ 'outgoing_msg': msg.mine, 'incoming_msg': !msg.mine }">
+                        <div :class="{ 'sent_msg': msg.mine, 'received_msg': !msg.mine }">
+                            <div :class="{ 'received_withd_msg': !msg.mine }">
+                                <p>{{msg.text}}</p>
+                                <span class="time_date">{{msg.sentAt}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="type_msg" v-if="activeChat != null">
+                    <div class="input_msg_write">
+                        <input v-model.trim="newMessageText" type="text" class="write_msg"
+                               placeholder="Type a message"/>
+                        <button @click="sendMsg" class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o"
+                                                                                       aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-    <!--</div>-->
+    </div>
 </template>
 
 <script>
@@ -66,28 +64,41 @@
 
                 newMessageText: '',
                 newMessageStatus: 'loaded',
+
+                chatRefresher: null
+            }
+        },
+        watch: {
+            activeChat: function (chat) {
+                if (chat != null) {
+                    this.loadChat();
+                }
             }
         },
         methods: {
             loadChatsList() {
                 this.listStatus = this.loading;
+                const context = this;
                 this.axios.get('/chat/list')
                     .then(response => {
                         if (response.data.status === 'ok') {
                             this.chatList = response.data.content[0];
-                            this.listStatus = this.loaded;
+                            this.listStatus = context.loaded;
                         } else if (response.data.status === 'error') {
-                            this.listStatus = this.error;
+                            this.listStatus = context.error;
                             this.errorCode = response.data.content[0];
                         }
                     }).catch((error) => {
-                    this.listStatus = this.error;
+                    this.listStatus = context.error;
                 });
             },
-            loadChat(chat) {
+            loadChat() {
+                if(this.activeChat == null) {
+                    return;
+                }
                 this.chatStatus = this.loading;
                 const context = this;
-                this.activeChat = chat;
+                const chat = this.activeChat;
                 this.axios.get('/chat/get', {
                     params: {
                         matchId: chat.id,
@@ -97,13 +108,13 @@
                 }).then(response => {
                     if (response.data.status === 'ok') {
                         context.activeChatMessages = response.data.content[0];
-                        context.chatStatus = this.loaded;
+                        context.chatStatus = context.loaded;
                     } else if (response.data.status === 'error') {
-                        context.chatStatus = this.error;
+                        context.chatStatus = context.error;
                         context.errorCode = response.data.content[0];
                     }
                 }).catch((error) => {
-                    context.chatStatus = this.error;
+                    context.chatStatus = context.error;
                 });
             },
             sendMsg() {
@@ -116,14 +127,14 @@
                     .then(response => {
                         if (response.data.status === 'ok') {
                             context.newMessageText = "";
-                            context.newMessageStatus = this.loaded;
+                            context.newMessageStatus = context.loaded;
                             context.loadChat(this.activeChat);
                         } else if (response.data.status === 'error') {
-                            context.newMessageStatus = this.error;
+                            context.newMessageStatus = context.error;
                             context.errorCode = response.data.content[0];
                         }
                     }).catch((error) => {
-                    context.newMessageStatus = this.error;
+                    context.newMessageStatus = context.error;
                 });
             }
         },
@@ -133,6 +144,11 @@
                 return;
             }
             this.loadChatsList();
+            this.loadChat();
+            this.chatRefresher = setInterval(this.loadChat, 3 * 1000);
+        },
+        beforeDestroy() {
+            clearInterval(this.chatRefresher);
         }
     }
 </script>
