@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-fixed-top navbar-expand-sm navbar-light bg-light">
+    <nav class="navbar navbar-fixed-top navbar-expand-sm navbar-dark bg-dark">
         <router-link tag="div" to="/" class="navbar-brand nav-justified"><a><img src="../assets/logo.png" height="25" width="25"/>DTinder</a></router-link>
         <button v-if="authenticated" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
             <span class="navbar-toggler-icon"></span>

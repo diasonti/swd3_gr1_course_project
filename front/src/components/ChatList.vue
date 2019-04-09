@@ -1,47 +1,50 @@
 <template>
-    <div class="messaging">
-        <div class="inbox_msg">
-            <div class="inbox_people">
-                <div class="headind_srch">
-                    <div class="recent_heading">
-                        <h4>Chats list</h4>
+    <!--<div class="container">-->
+        <div class="messaging">
+            <div class="inbox_msg">
+                <div class="inbox_people">
+                    <div class="headind_srch">
+                        <div class="recent_heading">
+                            <h4>Chats list</h4>
+                        </div>
                     </div>
-                </div>
-                <div class="inbox_chat">
+                    <div class="inbox_chat">
 
-                    <div class="chat_list" v-for="chat in chatList" :key="chat.id" @click="loadChat(chat)">
-                        <div class="chat_people">
-                            <div class="chat_ib">
-                                <h5>{{chat.matchedUser.name}} <span class="chat_date">{{chat.matchedAt}}</span></h5>
-                                <p><span v-if="chat.lastMessage != null">{{chat.lastMessage.text}}</span></p>
+                        <div class="chat_list" v-for="chat in chatList" :key="chat.id" @click="loadChat(chat)">
+                            <div class="chat_people">
+                                <div class="chat_ib">
+                                    <h5>{{chat.matchedUser.name}} <span class="chat_date">{{chat.matchedAt}}</span></h5>
+                                    <p><span v-if="chat.lastMessage != null">{{chat.lastMessage.text}}</span></p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="mesgs">
-                <div class="msg_history">
-                    <div v-for="msg in activeChatMessages" :key="msg.id"
-                         :class="{ 'outgoing_msg': msg.mine, 'incoming_msg': !msg.mine }">
-                        <div :class="{ 'sent_msg': msg.mine, 'received_msg': !msg.mine }">
-                            <div :class="{ 'received_withd_msg': !msg.mine }">
-                                <p>{{msg.text}}</p>
-                                <span class="time_date">{{msg.sentAt}}</span>
+                <div class="mesgs">
+                    <div class="msg_history">
+                        <div v-for="msg in activeChatMessages" :key="msg.id"
+                             :class="{ 'outgoing_msg': msg.mine, 'incoming_msg': !msg.mine }">
+                            <div :class="{ 'sent_msg': msg.mine, 'received_msg': !msg.mine }">
+                                <div :class="{ 'received_withd_msg': !msg.mine }">
+                                    <p>{{msg.text}}</p>
+                                    <span class="time_date">{{msg.sentAt}}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="type_msg" v-if="activeChat != null">
-                    <div class="input_msg_write">
-                        <input v-model.trim="newMessageText" type="text" class="write_msg"
-                               placeholder="Type a message"/>
-                        <button @click="sendMsg" class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o"
-                                                                                       aria-hidden="true"></i></button>
+                    <div class="type_msg" v-if="activeChat != null">
+                        <div class="input_msg_write">
+                            <input v-model.trim="newMessageText" type="text" class="write_msg"
+                                   placeholder="Type a message"/>
+                            <button @click="sendMsg" class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o"
+                                                                                           aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    <!--</div>-->
 </template>
 
 <script>
@@ -92,14 +95,14 @@
                         to: 10
                     }
                 }).then(response => {
-                        if (response.data.status === 'ok') {
-                            context.activeChatMessages = response.data.content[0];
-                            context.chatStatus = this.loaded;
-                        } else if (response.data.status === 'error') {
-                            context.chatStatus = this.error;
-                            context.errorCode = response.data.content[0];
-                        }
-                    }).catch((error) => {
+                    if (response.data.status === 'ok') {
+                        context.activeChatMessages = response.data.content[0];
+                        context.chatStatus = this.loaded;
+                    } else if (response.data.status === 'error') {
+                        context.chatStatus = this.error;
+                        context.errorCode = response.data.content[0];
+                    }
+                }).catch((error) => {
                     context.chatStatus = this.error;
                 });
             },
@@ -156,7 +159,6 @@
     .top_spac {
         margin: 20px 0 0;
     }
-
 
     .recent_heading {
         float: left;

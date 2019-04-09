@@ -1,9 +1,9 @@
 <template>
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
-            <div class="col-sm-6 userProfile">
-                <h1>My user profile</h1>
-
+            <div class="col-sm-5 userProfile">
+                <h1>Info:</h1>
+                <p class="text-muted">these informations will be shown to others</p>
                 <div v-if="status.userProfile.load === inProgress" class="spinner-border text-info" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
@@ -38,15 +38,15 @@
                         <textarea v-model.trim="userProfile.description" class="form-control"
                                   id="profileDescriptionInput" rows="3"></textarea>
                     </div>
-                    <button v-if="status.userProfile.save !== inProgress" @click="saveUserProfile" type="button" class="btn btn-primary">Save my profile</button>
+                    <button v-if="status.userProfile.save !== inProgress" @click="saveUserProfile" type="button" class="myButto">Save my profile</button>
                     <button v-if="status.userProfile.save === inProgress" class="btn btn-primary" type="button" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         Loading...
                     </button>
                 </form>
             </div>
-            <div class="col-sm-6 mmPreferences">
-                <h1>My matchmaking preferences</h1>
+            <div class="col-sm-5 offset-2 mmPreferences">
+                <h1>Preferences</h1>
 
                 <div v-if="status.mmPref.load === inProgress" class="spinner-border text-info" role="status">
                     <span class="sr-only">Loading...</span>
@@ -71,7 +71,7 @@
                         <input v-model.number="mmPref.ageMax" type="number" class="form-control" id="mmPrefAgeMaxInput"
                                placeholder="Not older than">
                     </div>
-                    <button v-if="status.mmPref.save !== inProgress" @click="saveMmPreferences" type="button" class="btn btn-primary">Save my preferences</button>
+                    <button v-if="status.mmPref.save !== inProgress" @click="saveMmPreferences" type="button" class="myButto">Save my preferences</button>
                     <button v-if="status.mmPref.save === inProgress" class="btn btn-primary" type="button" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         Loading...
@@ -192,6 +192,44 @@
     }
 </script>
 
+
 <style scoped>
 
+    input, select, textarea{
+        border: black 2px solid;
+    }
+    label {
+        font-weight: bold;
+
+    }
+
+    button {
+        background-color: white;
+        color: black;
+        border: 2px solid black;
+        font-weight: bold;
+        padding: 10px 20px;
+    }
+
+    button:hover{
+        background-color: black;
+        color: white;
+    }
+
+    .myTtile {
+        font-weight: bold;
+        text-decoration: underline;
+        font-family: "American Typewriter";
+    }
+
+    .userProfile{
+        padding: 10px 20px;
+        /*background-color: rgb(242, 242, 242);*/
+
+    }
+
+    .mmPreferences{
+        padding: 30px 20px 50px 20px;
+        /*background-color: white;*/
+    }
 </style>
