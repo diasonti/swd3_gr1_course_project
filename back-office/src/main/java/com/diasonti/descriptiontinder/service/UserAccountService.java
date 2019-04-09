@@ -1,5 +1,7 @@
 package com.diasonti.descriptiontinder.service;
 
+import com.auth0.jwt.JWT;
+import com.diasonti.descriptiontinder.config.security.jwt.JWTConfig;
 import com.diasonti.descriptiontinder.data.entity.UserAccount;
 import com.diasonti.descriptiontinder.data.enums.UserRole;
 import com.diasonti.descriptiontinder.data.form.UserRegistrationForm;
@@ -12,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Base64;
+import java.util.Date;
+
+import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 @Service
 public class UserAccountService {
@@ -34,8 +38,10 @@ public class UserAccountService {
         String token = null;
         final UserAccount userAccount = userAccountRepository.findByUsername(username).orElse(null);
         if(userAccount != null && passwordEncoder.matches(password, userAccount.getPassword())) {
-            final String pair = username + ":" + password;
-            token = Base64.getEncoder().encodeToString(pair.getBytes());
+            token = JWT.create()
+                    .withSubject(userAccount.getUsername())
+                    .withExpiresAt(new Date(System.currentTimeMillis() + JWTConfig.EXPIRATION_TIME))
+                    .sign(HMAC512(JWTConfig.SECRET.getBytes()));
             log.info("Auth token generated - {}, token='{}'", userAccount.toString(), token);
         }
         if(token == null) {

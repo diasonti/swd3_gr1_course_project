@@ -4,7 +4,6 @@ import Vuex from 'vuex'
 Vue.use(Vuex);
 
 const state = {
-    userId: null,
     token: localStorage.getItem('auth_token'),
     error: null
 };
@@ -16,20 +15,12 @@ const getters = {
 
     error: state => {
         return state.error;
-    },
-
-    userId: state => {
-        return state.userId;
     }
 };
 
 const mutations = {
     LOGIN_SUCCESS (state, token) {
         state.token = token;
-        state.error = null;
-    },
-    SET_USER_ID (state, userId) {
-        state.userId = userId;
         state.error = null;
     },
     LOGIN_FAILURE (state, error) {
@@ -52,10 +43,9 @@ const actions = {
 
         return Vue.axios.post('/auth/token', formData)
             .then(response => {
-                if(response.data.validCredentials) {
-                    localStorage.setItem('auth_token', response.data.authToken);
-                    context.commit('LOGIN_SUCCESS', response.data.authToken, response.data.userId);
-                    context.commit('SET_USER_ID', response.data.userId);
+                if(response.data != null && response.data !== "") {
+                    localStorage.setItem('auth_token', response.data);
+                    context.commit('LOGIN_SUCCESS', response.data);
                 } else {
                     context.commit('LOGIN_FAILURE', "bad.credentials");
                     throw "bad.credentials";

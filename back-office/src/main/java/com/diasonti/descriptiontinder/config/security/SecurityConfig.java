@@ -1,5 +1,6 @@
 package com.diasonti.descriptiontinder.config.security;
 
+import com.diasonti.descriptiontinder.config.security.jwt.JWTAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,7 +10,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -31,16 +31,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/**").authenticated()
                     .antMatchers("/js/**", "/css/**", "/img/**", "/favicon.ico", "/test/**").permitAll()
                     .antMatchers("/**").permitAll()
-                .and().httpBasic().authenticationEntryPoint(apiBasicAuthenticationEntryPoint())
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), customUserDetailsService))
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         ;
-    }
-
-    @Bean
-    public BasicAuthenticationEntryPoint apiBasicAuthenticationEntryPoint() {
-        final BasicAuthenticationEntryPoint entryPoint = new ApiBasicAuthenticationEntryPoint();
-        entryPoint.setRealmName("DTINDER");
-        return entryPoint;
     }
 
     @Bean
