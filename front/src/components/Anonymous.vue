@@ -16,13 +16,17 @@
                     <form>
                         <div class="form-group">
                             <label for="logInUsernameInput">Username</label>
-                            <input v-model="logInUsername" type="text" class="form-control" id="logInUsernameInput"
+                            <input v-model="logInUsername" type="text" class="form-control textbox" id="logInUsernameInput"
                                    placeholder="Enter username" @keyup.enter="submitLogIn">
                         </div>
                         <div class="form-group">
                             <label for="logInPasswordInput">Password</label>
-                            <input v-model="logInPassword" type="password" class="form-control" id="logInPasswordInput"
+                            <input v-model="logInPassword" type="password" class="form-control textbox" id="logInPasswordInput"
                                    placeholder="Enter password" @keyup.enter="submitLogIn">
+                        </div>
+                        <div class="form-group form-check">
+                            <input  v-model="logInRememberMe" type="checkbox" class="form-check-input" id="logInRememberMe">
+                            <label class="form-check-label" for="logInRememberMe">Keep me signed in</label>
                         </div>
                         <button v-if="!loginInProgress" @click="submitLogIn" type="button" class="btn btn-primary">Sign
                             in
@@ -52,7 +56,7 @@
                     <form id="registerForm">
                         <div class="form-group">
                             <label for="registerUsernameInput">Username</label>
-                            <input v-model="registerUsername" type="text" class="form-control no-autocomplete"
+                            <input v-model="registerUsername" type="text" class="form-control no-autocomplete textbox"
                                    id="registerUsernameInput"
                                    :class="{'is-invalid': registrationUsernameError}"
                                    placeholder="Enter username" @keyup.enter="submitRegistration" readonly>
@@ -66,7 +70,7 @@
                         </div>
                         <div class="form-group">
                             <label for="registerPasswordInput1">Password</label>
-                            <input v-model="registerPassword1" type="password" class="form-control no-autocomplete"
+                            <input v-model="registerPassword1" type="password" class="form-control no-autocomplete textbox"
                                    id="registerPasswordInput1"
                                    :class="{'is-invalid': registrationPassword1Error}"
                                    placeholder="Enter password" @keyup.enter="submitRegistration" readonly>
@@ -76,7 +80,7 @@
                         </div>
                         <div class="form-group">
                             <label for="registerPasswordInput2">Confirm password</label>
-                            <input v-model="registerPassword2" type="password" class="form-control no-autocomplete"
+                            <input v-model="registerPassword2" type="password" class="form-control no-autocomplete textbox"
                                    id="registerPasswordInput2"
                                    :class="{'is-invalid': registrationPassword2Error}"
                                    placeholder="Enter password again" @keyup.enter="submitRegistration" readonly>
@@ -112,6 +116,7 @@
 
                 logInUsername: '',
                 logInPassword: '',
+                logInRememberMe: false,
 
                 loginInProgress: false,
                 loginErrors: [],
@@ -150,6 +155,7 @@
                 this.$store.dispatch('checkCredentials', {
                     username: this.logInUsername,
                     password: this.logInPassword,
+                    rememberMe: this.logInRememberMe,
                 }).then(() => {
                     this.loginInProgress = false;
                     this.$router.push("profile");
@@ -214,7 +220,7 @@
         color: white;
     }
 
-    input, select, textarea {
+    .textbox {
         min-width: 300px;
         border: black 2px solid;
     }

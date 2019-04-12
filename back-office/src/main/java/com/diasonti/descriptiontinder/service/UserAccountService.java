@@ -34,13 +34,13 @@ public class UserAccountService {
     }
 
     @Transactional(readOnly = true)
-    public String getAuthToken(String username, String password) {
+    public String getAuthToken(String username, String password, boolean noExpiration) {
         String token = null;
         final UserAccount userAccount = userAccountRepository.findByUsername(username).orElse(null);
         if(userAccount != null && passwordEncoder.matches(password, userAccount.getPassword())) {
             token = JWT.create()
                     .withSubject(userAccount.getUsername())
-                    .withExpiresAt(new Date(System.currentTimeMillis() + JWTConfig.EXPIRATION_TIME))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + (noExpiration ? JWTConfig.ONE_YEAR : JWTConfig.TEN_DAYS)))
                     .sign(HMAC512(JWTConfig.SECRET.getBytes()));
             log.info("Auth token generated - {}, token='{}'", userAccount.toString(), token);
         }

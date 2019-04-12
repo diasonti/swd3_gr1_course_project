@@ -19,8 +19,9 @@ public class AuthController {
     }
 
     @PostMapping(path = "/token")
-    public String getAuthToken(@RequestParam String username, @RequestParam String password) {
-        return userAccountService.getAuthToken(username, password);
+    public String getAuthToken(@RequestParam String username, @RequestParam String password,
+                               @RequestParam(defaultValue = "false") boolean rememberMe) {
+        return userAccountService.getAuthToken(username, password, rememberMe);
     }
 
 }

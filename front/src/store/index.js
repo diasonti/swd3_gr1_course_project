@@ -40,6 +40,7 @@ const actions = {
         const formData = new FormData();
         formData.append('username', auth.username);
         formData.append('password', auth.password);
+        formData.append('rememberMe', auth.rememberMe);
 
         return Vue.axios.post('/auth/token', formData)
             .then(response => {
