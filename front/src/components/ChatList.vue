@@ -35,8 +35,8 @@
                     <div class="input_msg_write">
                         <input v-model.trim="newMessageText" type="text" class="write_msg"
                                placeholder="Type a message"/>
-                        <button @click="sendMsg" class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o"
-                                                                                       aria-hidden="true"></i>
+                        <button @click="sendMsg" class="msg_send_btn" type="button" :disabled="newMessageTextClear">
+                            <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
@@ -73,6 +73,11 @@
                 if (chat != null) {
                     this.loadChat();
                 }
+            }
+        },
+        computed: {
+            newMessageTextClear() {
+                return this.newMessageText == null || this.newMessageText == "";
             }
         },
         methods: {
@@ -118,6 +123,9 @@
                 });
             },
             sendMsg() {
+                if(this.newMessageTextClear) {
+                    return;
+                }
                 this.newMessageStatus = this.loading;
                 const context = this;
                 const formData = new FormData();

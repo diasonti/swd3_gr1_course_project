@@ -39,11 +39,11 @@ public class AfterMatchController {
 
     @PostMapping("/chat/send")
     public RestMessage sendMessage(@RequestParam Long matchId, @RequestParam String text) {
-        final boolean isSuccess = chatService.saveMessage(matchId, text);
-        if(isSuccess)
+        final String error = chatService.saveMessage(matchId, text);
+        if(error == null)
             return RestMessage.ok();
         else
-            return RestMessage.error();
+            return RestMessage.error(error);
     }
 
 }

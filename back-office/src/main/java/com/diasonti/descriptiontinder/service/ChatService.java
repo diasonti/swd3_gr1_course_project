@@ -48,11 +48,11 @@ public class ChatService {
     }
 
     @Transactional
-    public boolean saveMessage(Long matchId, String messageText) {
+    public String saveMessage(Long matchId, String messageText) {
+        if(messageText.trim().isEmpty()) return "message.is.blank";
         final MmMatch match = matchRepository.findById(matchId).orElse(null);
         final UserAccount sender = UserAccountHolder.getCurrentUser();
-        if(match == null || !match.hasUserWithId(sender.getId()))
-            return false;
+        if(match == null || !match.hasUserWithId(sender.getId())) return "invalid.match.id";
         final UserAccount receiver = match.getFirstUser().equals(sender) ? match.getSecondUser() : match.getFirstUser();
         final ChatMessage message = new ChatMessage();
         message.setMatch(match);
@@ -61,7 +61,7 @@ public class ChatService {
         message.setText(messageText);
         message.setSentAt(LocalDateTime.now());
         chatMessageRepository.save(message);
-        return true;
+        return null;
     }
 
 }
