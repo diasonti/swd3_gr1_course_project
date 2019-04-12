@@ -11,12 +11,8 @@
 </script>
 
 <style scoped>
-
-    footer{
-        position: absolute;
+    footer {
         padding: 5px;
-        bottom: 0;
-        width: 100%;
         background-color: black;
         color: white;
     }
