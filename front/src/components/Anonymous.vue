@@ -135,6 +135,23 @@
                 image: "../assets/bg1.jpg"
             }
         },
+        watch: {
+            currentTab: function (tab) {
+                if(tab != null) {
+                    this.logInUsername = '';
+                    this.logInPassword = '';
+                    this.logInRememberMe = false;
+                    this.loginErrors = [];
+
+                    this.registerUsername = '';
+                    this.registerPassword1 = '';
+                    this.registerPassword2 = '';
+                    this.registerSuccess = false;
+                    this.registerFailed = false;
+                    this.registerErrors = [];
+                }
+            }
+        },
         computed: {
             registrationUsernameError() {
                 const errors = ['username.length.error', 'username.is.taken'];
