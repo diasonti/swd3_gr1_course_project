@@ -20,7 +20,7 @@
 <style>
     @import url('https://fonts.googleapis.com/css?family=Lato:400,700');
     body{
-        overflow: hidden;
+        /*overflow: hidden;*/
         font-family: 'Lato', sans-serif;
         /*color: #505962;*/
     }
