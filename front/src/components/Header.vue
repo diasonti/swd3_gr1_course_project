@@ -15,7 +15,7 @@
                 <router-link tag="li" to="/chat" active-class="active" class="nav-item">
                     <a class="nav-link">Chat</a>
                 </router-link>
-                <li class="nav-item bg-warning logout">
+                <li class="nav-item logout">
                     <a @click="logOut" href="#" class="nav-link">Log out</a>
                 </li>
             </ul>
@@ -45,20 +45,39 @@
 </script>
 
 <style scoped>
-    .nav-item {
-        min-width: 100px;
-        border-radius: 10px;
+
+    .navbar{
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: .9rem;
+        letter-spacing: .1rem;
+        background: rgb(0,0,0)!important;
+        /*background: rgba(0,0,0,0.6)!important;*/
+
     }
 
-    .nav-item:hover {
-        background-color: #17a2b8 !important;
-        transition: background-color;
+    .navbar-brand img{
+        height: 2rem;
+    }
+
+    .navbar li{
+        padding-right: .9rem;
+    }
+
+    .navbar-dark .navbar-nav .nav-link{
+        color:white;
+        padding-top: .8rem;
+    }
+
+    .navbar-dark .navbar-nav .nav-link:hover{
+        color:#1ebba3;
+    }
+
+    .logout a:hover {
+        color: red !important;
+        transition: color;
         transition-duration: 200ms;
     }
 
-    .logout:hover {
-        background-color: #dc3545 !important;
-        transition: background-color;
-        transition-duration: 200ms;
-    }
+
 </style>

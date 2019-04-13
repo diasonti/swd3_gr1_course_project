@@ -18,6 +18,13 @@
 </script>
 
 <style>
+    @import url('https://fonts.googleapis.com/css?family=Lato:400,700');
+    body{
+        overflow: hidden;
+        font-family: 'Lato', sans-serif;
+        /*color: #505962;*/
+    }
+
     html {
         position: relative;
         min-height: 100%;
