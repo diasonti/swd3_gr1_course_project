@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="row">
-            <div class="col-sm-5 userProfile">
+            <div class="col-md-5 col-sm-12 userProfile">
                 <h1>Info:</h1>
                 <p class="text-muted">these informations will be shown to others</p>
                 <div v-if="status.userProfile.load === inProgress" class="spinner-border text-info" role="status">
@@ -45,7 +45,7 @@
                     </button>
                 </form>
             </div>
-            <div class="col-sm-5 offset-2 mmPreferences">
+            <div class="col-md-5 offset-md-2 col-sm-12 mmPreferences">
                 <h1>Preferences</h1>
 
                 <div v-if="status.mmPref.load === inProgress" class="spinner-border text-info" role="status">
