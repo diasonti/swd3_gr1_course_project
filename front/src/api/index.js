@@ -3,7 +3,7 @@ import VueAxios from 'vue-axios'
 import axios from 'axios'
 import store from '@/store'
 
-axios.defaults.baseURL = 'http://localhost:5000/api';
+axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'https://dtinder.diasonti.com/api' : 'http://localhost:5000/api';
 
 axios.interceptors.request.use((config) => {
     if (store.getters.token) {
