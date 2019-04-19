@@ -1,10 +1,7 @@
 <template>
 
     <div>
-
         <div>
-
-
             <div class="landing">
                 <div class="home-wrap">
                     <div class="home-inner"></div>
@@ -17,8 +14,6 @@
                 <a class="btn btn-outline-light btn-lg" data-toggle="modal" data-target="#exampleModalLong">Get
                     Started</a>
             </div>
-
-
         </div>
 
         <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog"
@@ -27,7 +22,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Welcome to BestJob</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Welcome to DTinder</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
