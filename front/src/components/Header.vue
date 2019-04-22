@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-fixed-top navbar-expand-sm navbar-dark bg-dark">
+    <nav class="navbar navbar-fixed-top navbar-expand-sm navbar-dark bg-dark fixed-top" v-bind:class="{opacityClass:!authenticated}">
         <router-link tag="div" to="/" class="navbar-brand nav-justified"><a><img src="../assets/logo.png" height="25" width="25"/>DTinder</a></router-link>
         <button v-if="authenticated" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
             <span class="navbar-toggler-icon"></span>
@@ -45,6 +45,13 @@
 </script>
 
 <style scoped>
+
+    /*.opacityClass{*/
+        /*opacity: 0.6;*/
+    /*}*/
+    /*.fixed-top  {*/
+        /*-webkit-backface-visibility: hidden;*/
+    /*}*/
 
     .navbar{
         text-transform: uppercase;

@@ -195,6 +195,9 @@
 
 <style scoped>
 
+    .container{
+        margin-top: 40px;
+    }
     input, select, textarea{
         border: black 2px solid;
     }

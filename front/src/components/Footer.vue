@@ -1,19 +1,25 @@
 <template>
-    <footer class="text-center">
+    <footer class="text-center footer fixed-bottom" v-if="authenticated">
         © 2019 Group 1. All rights reserved
     </footer>
 </template>
 
 <script>
     export default {
-        name: "Footer"
+        name: "Footer",
+        computed: {
+            authenticated: function () {
+                return this.$store.getters.token;
+            },
+        }
     }
 </script>
 
 <style scoped>
     footer {
-        padding: 5px;
+        height: 25px;
         background-color: black;
         color: white;
+        bottom: 0;
     }
 </style>

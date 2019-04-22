@@ -52,14 +52,19 @@
                         </div>
                     </div>
 
-                    <div class="card" v-if="status === loaded">
+                    <div class="card shadow-lg" v-if="status === loaded">
                         <div class="card-header text-center">What about this one?</div>
                         <div class="card-body">
+                            <div class="descriptionBox">
+                                <p>{{currentCandidate.description}}</p>
+                            </div>
+
+                            <hr>
                             <p>Name: {{currentCandidate.name}}</p>
                             <p>Age: {{currentCandidate.age}}</p>
                             <p>Gender: {{currentCandidate.gender}}</p>
                             <p>From: {{currentCandidate.location}}</p>
-                            <p>Text: {{currentCandidate.description}}</p>
+
                         </div>
                         <div class="card-footer">
                             <div class="row">
@@ -167,6 +172,8 @@
 </script>
 
 <style scoped>
+    @import url('https://fonts.googleapis.com/css?family=Playball&subset=latin-ext');
+
 
     .matchBox{
         width: 600px;
@@ -178,6 +185,21 @@
         right: 0;
         top: 0;
         bottom: 0;
+
         position: absolute;
+    }
+
+    .card{
+        border: 2px black solid;
+    }
+
+    .descriptionBox{
+        width: 600px;
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Playball', cursive;
+        font-size: 2rem;
     }
 </style>
