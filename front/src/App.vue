@@ -24,4 +24,7 @@
         /*color: #505962;*/
         /*overflow: hidden;*/
     }
+    html{
+        overflow: scroll;
+    }
 </style>
