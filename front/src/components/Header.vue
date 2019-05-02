@@ -33,12 +33,15 @@
         },
         methods: {
             logOut() {
-                this.$store.dispatch('logOut', {})
-                    .then(() => {
-                        this.$router.push("/");
-                    }).catch(() => {
+                if(confirm('Are you sure to logout')) {
+                    
+                    this.$store.dispatch('logOut', {})
+                        .then(() => {
+                            this.$router.push("/");
+                        }).catch(() => {
 
-                })
+                    })
+                }
             }
         }
     }
