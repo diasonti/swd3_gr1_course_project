@@ -46,9 +46,9 @@
 
 <style scoped>
 
-    /*.opacityClass{*/
-        /*opacity: 0.6;*/
-    /*}*/
+    .opacityClass{
+        opacity: 0.6;
+    }
     /*.fixed-top  {*/
         /*-webkit-backface-visibility: hidden;*/
     /*}*/
