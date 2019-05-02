@@ -370,6 +370,7 @@
 
     .messaging {
         padding: 0 0 50px 0;
+        margin-top: 60px;
     }
 
     .msg_history {
