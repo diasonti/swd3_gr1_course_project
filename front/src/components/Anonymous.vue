@@ -11,7 +11,7 @@
             <div class="caption text-center">
                 <h1>Welcome to DTinder</h1>
                 <h3>Meet your Soulmate here</h3>
-                <a class="btn btn-outline-light btn-lg" data-toggle="modal" data-target="#exampleModalLong">Get
+                <a class="btn btn-outline-light btn-lg clickable" data-toggle="modal" data-target="#exampleModalLong">Get
                     Started</a>
             </div>
         </div>
@@ -261,6 +261,10 @@
 
 <style scoped>
 
+    /* for ios devices*/
+    .clickable {
+        cursor:pointer;
+    }
 
     .modal {
         background: rgba(000, 000, 000, 0.8);
