@@ -79,10 +79,12 @@
                                 <div class="alert alert-danger" role="alert" v-if="registerFailed">
                                     Something went wrong, please try again.
                                 </div>
-                                <form id="registerForm">
+                                <form id="registerForm" autocomplete="off">
+                                    <input type="text" style="opacity: 0;position: absolute;" id="preventAutocomplete1">
+                                    <input type="password" style="opacity: 0;position: absolute;" id="preventAutocomplete2">
                                     <div class="form-group">
                                         <label for="registerUsernameInput">Username</label>
-                                        <input v-model="registerUsername" type="text"
+                                        <input v-model="registerUsername" type="text" autocomplete="off"
                                                class="form-control no-autocomplete textbox"
                                                id="registerUsernameInput"
                                                :class="{'is-invalid': registrationUsernameError}"
