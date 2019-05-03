@@ -89,5 +89,9 @@
         transition-duration: 200ms;
     }
 
+    .logout{
+        border-left: white 2px solid;
+    }
+
 
 </style>
