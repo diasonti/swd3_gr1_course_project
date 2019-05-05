@@ -1,7 +1,11 @@
 <template>
-    <footer class="text-center footer fixed-bottom" v-if="authenticated">
-        © 2019 Group 1. All rights reserved
-    </footer>
+    <div>
+        <div class="blankSpace"></div>
+        <footer class="text-center footer fixed-bottom" v-if="authenticated">
+            © 2019 Group 1. All rights reserved
+        </footer>
+    </div>
+
 </template>
 
 <script>
@@ -21,5 +25,9 @@
         background-color: black;
         color: white;
         bottom: 0;
+    }
+
+    .blankSpace{
+        height: 50px;
     }
 </style>
