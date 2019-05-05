@@ -7,16 +7,16 @@
         <div v-if="authenticated" class="navbar-collapse collapse justify-content-center" id="collapsingNavbar">
             <ul class="navbar-nav text-center">
                 <router-link tag="li" to="/profile" active-class="active" class="nav-item">
-                    <a class="nav-link">Profile</a>
+                    <a class="nav-link" data-toggle="collapse" data-target=".navbar-collapse">Profile</a>
                 </router-link>
                 <router-link tag="li" to="/matchmaking" active-class="active" class="nav-item">
-                    <a class="nav-link">Matchmaking</a>
+                    <a class="nav-link" data-toggle="collapse" data-target=".navbar-collapse">Matchmaking</a>
                 </router-link>
                 <router-link tag="li" to="/chat" active-class="active" class="nav-item">
-                    <a class="nav-link">Chat</a>
+                    <a class="nav-link" data-toggle="collapse" data-target=".navbar-collapse">Chat</a>
                 </router-link>
                 <li class="nav-item logout">
-                    <a @click="logOut" href="#" class="nav-link">Log out</a>
+                    <a @click="logOut" href="#" class="nav-link" data-toggle="collapse" data-target=".navbar-collapse">Log out</a>
                 </li>
             </ul>
         </div>
