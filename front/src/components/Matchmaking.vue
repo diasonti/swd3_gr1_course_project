@@ -1,86 +1,84 @@
 <template>
 
     <div class="container">
-        <!--<div class="row">-->
-            <!--<div class="col-sm-3"></div>-->
-            <!--<div class="col-sm-6">-->
-                <div class="matchBox">
+        <div class="row">
+            <div class="col-md-8 offset-md-2 col-sm-12 matchBox">
 
 
-                    <div class="alert alert-danger" role="alert" v-if="status === error && errorCode === null">
-                        Something's not right. Try reloading the page.
+                <div class="alert alert-danger" role="alert" v-if="status === error && errorCode === null">
+                    Something's not right. Try reloading the page.
+                </div>
+
+                <div class="alert alert-warning" role="alert" v-if="errorCode === 'profile.not.filled'">
+                    You must fill your
+                    <router-link to="/profile" class="alert-link">profile</router-link>
+                    first.
+                </div>
+
+                <div class="alert alert-warning" role="alert" v-if="errorCode === 'no.candidate.available'">
+                    No suitable candidates found. Try again later or change your
+                    <router-link to="/profile" class="alert-link">search preferences</router-link>
+                    .
+                </div>
+
+
+                <div class="card" v-if="status === loading">
+                    <div class="card-header text-center">Loading next candidate...</div>
+                    <div class="card-body">
+                        <div class="text-center">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="alert alert-warning" role="alert" v-if="errorCode === 'profile.not.filled'">
-                        You must fill your
-                        <router-link to="/profile" class="alert-link">profile</router-link>
-                        first.
-                    </div>
-
-                    <div class="alert alert-warning" role="alert" v-if="errorCode === 'no.candidate.available'">
-                        No suitable candidates found. Try again later or change your
-                        <router-link to="/profile" class="alert-link">search preferences</router-link>
-                        .
-                    </div>
-
-
-                    <div class="card" v-if="status === loading">
-                        <div class="card-header text-center">Loading next candidate...</div>
-                        <div class="card-body">
-                            <div class="text-center">
-                                <div class="spinner-border" role="status">
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-sm-1"></div>
+                            <button type="button" class="col-sm btn btn-success" disabled>
+                                <div class="spinner-border spinner-border-sm" role="status">
                                     <span class="sr-only">Loading...</span>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="col-sm-1"></div>
-                                <button type="button" class="col-sm btn btn-success" disabled>
-                                    <div class="spinner-border spinner-border-sm" role="status">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>
-                                </button>
-                                <div class="col-sm-1">&nbsp;</div>
-                                <button type="button" class="col-sm btn btn-danger" disabled>
-                                    <div class="spinner-border spinner-border-sm" role="status">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>
-                                </button>
-                                <div class="col-sm-1"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card shadow-lg" v-if="status === loaded">
-                        <div class="card-header text-center">What about this one?</div>
-                        <div class="card-body">
-                            <div class="descriptionBox">
-                                <p>{{currentCandidate.description}}</p>
-                            </div>
-
-                            <hr>
-                            <p>Name: {{currentCandidate.name}}</p>
-                            <p>Age: {{currentCandidate.age}}</p>
-                            <p>Gender: {{currentCandidate.gender}}</p>
-                            <p>From: {{currentCandidate.location}}</p>
-
-                        </div>
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="col-sm-1"></div>
-                                <button @click="dislike" type="button" class="col-sm btn btn-danger">Dislike</button>
-                                <div class="col-sm-1">&nbsp;</div>
-                                <button @click="like" type="button" class="col-sm btn btn-success">Like</button>
-                                <div class="col-sm-1"></div>
-                            </div>
+                            </button>
+                            <div class="col-sm-1">&nbsp;</div>
+                            <button type="button" class="col-sm btn btn-danger" disabled>
+                                <div class="spinner-border spinner-border-sm" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </button>
+                            <div class="col-sm-1"></div>
                         </div>
                     </div>
                 </div>
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="col-sm-3"></div>-->
+
+                <div class="card shadow-lg" v-if="status === loaded">
+                    <div class="card-header text-center">What about this one?</div>
+                    <div class="card-body">
+                        <div class="descriptionBox">
+                            <p>{{currentCandidate.description}}</p>
+                        </div>
+
+                        <hr>
+                        <p>Name: {{currentCandidate.name}}</p>
+                        <p>Age: {{currentCandidate.age}}</p>
+                        <p>Gender: {{currentCandidate.gender}}</p>
+                        <p>From: {{currentCandidate.location}}</p>
+
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-sm-1"></div>
+                            <button @click="dislike" type="button" class="col-sm btn btn-danger">Dislike</button>
+                            <div class="col-sm-1">&nbsp;</div>
+                            <button @click="like" type="button" class="col-sm btn btn-success">Like</button>
+                            <div class="col-sm-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+
 </template>
 
 <script>
@@ -175,27 +173,17 @@
     @import url('https://fonts.googleapis.com/css?family=Playball&subset=latin-ext');
 
 
-    .matchBox{
-        width: 600px;
-        height: 400px;
-        /*border: 1px solid black;*/
-        margin: auto;
-        padding: 5px;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-
-        position: absolute;
+    .matchBox {
+        margin-top: 100px;
     }
 
-    .card{
+    .card {
         border: 2px black solid;
     }
 
-    .descriptionBox{
-        width: 600px;
-        height: 200px;
+    .descriptionBox {
+        /*width: 600px;*/
+        /*height: 200px;*/
         display: flex;
         justify-content: center;
         align-items: center;
