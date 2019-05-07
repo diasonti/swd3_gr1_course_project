@@ -34,7 +34,7 @@
                 <div class="type_msg" v-if="activeChat != null">
                     <div class="input_msg_write">
                         <input v-model.trim="newMessageText" type="text" class="write_msg"
-                               placeholder="Type a message"/>
+                               placeholder="Type a message" v-on:keyup.enter="sendMsg"/>
                         <button @click="sendMsg" class="msg_send_btn" type="button" :disabled="newMessageTextClear">
                             <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
                         </button>
