@@ -24,7 +24,10 @@
         /*color: #505962;*/
         /*overflow: hidden;*/
     }
-    html{
+    html, body{
+        margin: 0;
+        padding: 0;
         overflow: scroll;
+
     }
 </style>
