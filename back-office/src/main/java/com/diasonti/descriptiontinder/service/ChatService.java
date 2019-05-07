@@ -39,7 +39,9 @@ public class ChatService {
             return Collections.emptyList();
         final int size = to - from;
         final int page = from / size;
-        final List<ChatMessage> messages = chatMessageRepository.findByMatch(match, PageRequest.of(page, size, Sort.by(Sort.Order.asc("sentAt"))));
+//        final List<ChatMessage> messages = chatMessageRepository.findByMatch(match, PageRequest.of(page, size, Sort.by(Sort.Order.asc("sentAt"))));
+        final List<ChatMessage> messages = chatMessageRepository.findByMatch(match, PageRequest.of(page, size, Sort.by(Sort.Order.desc("sentAt"))));
+        Collections.reverse(messages);
         return messages.stream().map(message -> {
             ChatMessageForm form = ChatMessageForm.of(message);
             form.setMine(form.getSender().getId().equals(currentUserId));
