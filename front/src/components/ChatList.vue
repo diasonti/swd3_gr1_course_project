@@ -81,6 +81,10 @@
             }
         },
         methods: {
+            scrollChatHistory(){
+                const chatHistory = this.$el.querySelector(".msg_history");
+                chatHistory.scrollTop = container.scrollHeight;
+            },
             loadChatsList() {
                 this.listStatus = this.loading;
                 const context = this;
@@ -137,6 +141,8 @@
                             context.newMessageText = "";
                             context.newMessageStatus = context.loaded;
                             context.loadChat(this.activeChat);
+                            context.scrollChatHistory();
+
                         } else if (response.data.status === 'error') {
                             context.newMessageStatus = context.error;
                             context.errorCode = response.data.content[0];
@@ -145,6 +151,7 @@
                     context.newMessageStatus = context.error;
                 });
             }
+
         },
         mounted() {
             if (!this.$store.getters.token) {
@@ -370,7 +377,8 @@
 
     .messaging {
         padding: 0 0 50px 0;
-        margin-top: 60px;
+        margin: 100px 50px;
+
     }
 
     .msg_history {
