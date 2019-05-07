@@ -4,12 +4,12 @@
             <div class="inbox_people">
                 <div class="headind_srch">
                     <div class="recent_heading">
-                        <h4>Chats list</h4>
+                        <h4>Conversations</h4>
                     </div>
                 </div>
                 <div class="inbox_chat">
 
-                    <div class="chat_list" v-for="chat in chatList" :key="chat.id" @click="activeChat = chat">
+                    <div v-for="chat in chatList" :key="chat.id" @click="activeChat = chat" :class="{chat_list:true, active_chat: chat==activeChat}">
                         <div class="chat_people">
                             <div class="chat_ib">
                                 <h5>{{chat.matchedUser.name}} <span class="chat_date">{{chat.matchedAt}}</span></h5>
@@ -81,7 +81,7 @@
             }
         },
         methods: {
-            scrollChatHistory(){
+            scrollChatHistory() {
                 const chatHistory = this.$el.querySelector(".msg_history");
                 chatHistory.scrollTop = container.scrollHeight;
             },
@@ -102,7 +102,7 @@
                 });
             },
             loadChat() {
-                if(this.activeChat == null) {
+                if (this.activeChat == null) {
                     return;
                 }
                 this.chatStatus = this.loading;
@@ -127,7 +127,7 @@
                 });
             },
             sendMsg() {
-                if(this.newMessageTextClear) {
+                if (this.newMessageTextClear) {
                     return;
                 }
                 this.newMessageStatus = this.loading;
@@ -173,6 +173,7 @@
         max-width: 100%;
     }
 
+
     .inbox_people {
         background: #f8f8f8 none repeat scroll 0 0;
         float: left;
@@ -204,7 +205,7 @@
     }
 
     .headind_srch {
-        padding: 10px 29px 10px 20px;
+        padding: 20px 30px;
         overflow: hidden;
         border-bottom: 1px solid #c4c4c4;
     }
@@ -235,23 +236,6 @@
         margin: 0 0 0 -27px;
     }
 
-    .chat_ib h5 {
-        font-size: 15px;
-        color: #464646;
-        margin: 0 0 8px 0;
-    }
-
-    .chat_ib h5 span {
-        font-size: 13px;
-        float: right;
-    }
-
-    .chat_ib p {
-        font-size: 14px;
-        color: #989898;
-        margin: auto
-    }
-
     .chat_img {
         float: left;
         width: 11%;
@@ -269,23 +253,49 @@
     }
 
     .chat_list {
-        border-bottom: 1px solid #c4c4c4;
+        /*border-bottom: 1px solid #c4c4c4;*/
         margin: 0;
         padding: 18px 16px 10px;
         cursor: pointer;
     }
 
-    .chat_list:hover {
-        background-color: grey;
+    .chat_list h5 {
+        font-size: 15px;
+        color: #464646;
+        margin: 0 0 8px 0;
     }
+
+    .chat_list h5 span {
+        font-size: 13px;
+        float: right;
+    }
+
+    .chat_list p {
+        font-size: 14px;
+        color: #989898;
+        margin: auto
+    }
+
+    .chat_list:hover {
+        background-color: #B1C5E6;
+    }
+
+    .active_chat {
+        background: #5581C9;
+    }
+
+    .active_chat h5, p {
+        color: white;
+    }
+
+    .active_chat p {
+        color: white;
+    }
+
 
     .inbox_chat {
         height: 550px;
         overflow-y: scroll;
-    }
-
-    .active_chat {
-        background: #ebebeb;
     }
 
     .incoming_msg_img {
@@ -328,9 +338,10 @@
     }
 
     .sent_msg p {
-        background: #05728f none repeat scroll 0 0;
+        background: #5581C9 none repeat scroll 0 0;
         border-radius: 3px;
         font-size: 14px;
+        margin: 0;
         margin: 0;
         color: #fff;
         padding: 5px 10px 5px 12px;
