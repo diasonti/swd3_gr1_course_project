@@ -1,45 +1,57 @@
 <template>
-    <div class="messaging">
-        <div class="inbox_msg">
-            <div class="inbox_people">
-                <div class="headind_srch">
-                    <div class="recent_heading">
-                        <h4>Conversations</h4>
+    <div class="row">
+        <div class="messaging col-lg-8 col-md-10 col-sm-12 offset-lg-2 offset-md-1">
+            <div class="inbox_msg row">
+                <div class="inbox_people col-sm-3 col-xs-2">
+                    <div class="headind_srch">
+                            <h4>Conversations</h4>
                     </div>
-                </div>
-                <div class="inbox_chat">
+                    <div class="inbox_chat">
 
-                    <div v-for="chat in chatList" :key="chat.id" @click="activeChat = chat"
-                         :class="{chat_list:true, active_chat: chat==activeChat}">
-                        <div class="chat_people">
-                            <div class="chat_ib">
-                                <h5><strong>{{chat.matchedUser.name}}</strong> <span class="chat_date">{{chat.matchedAt.slice(11,16)+' '+chat.matchedAt.slice(2,10)}}</span>
-                                </h5>
-                                <p><span v-if="chat.lastMessage != null">{{chat.lastMessage.text}}</span></p>
+                        <div v-for="chat in chatList" :key="chat.id" @click="activeChat = chat"
+                             :class="{chat_list:true, active_chat: chat==activeChat}">
+                            <div class="chat_people">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="font-weight-bold ">{{chat.matchedUser.name}}</h5>
+                                    <p class="">{{chat.lastMessage.sentAt}}</p>
+                                </div>
+                                    <p v-if="chat.lastMessage != null">{{chat.lastMessage.text}}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="mesgs">
-                <div class="msg_history">
-                    <div v-for="msg in activeChatMessages" :key="msg.id"
-                         :class="{ 'outgoing_msg': msg.mine, 'incoming_msg': !msg.mine }">
-                        <div :class="{ 'sent_msg': msg.mine, 'received_msg': !msg.mine }">
-                            <div :class="{ 'received_withd_msg': !msg.mine }">
-                                <p class="px-3 py-2">{{msg.text}}</p>
-                                <span class="time_date">{{msg.sentAt}}</span>
+                <div class="mesgs col-sm-9 col-xs-10">
+                    <div class="chat_heading">
+                        <div v-if="activeChat != null">
+                            <div class="row">
+                                <div class="col-4 offset-4">
+                                    <h4>{{activeChat.matchedUser.name}}</h4>
+                                </div>
+                                <div class="col-4">
+                                    <p class="text-muted">Matched at {{activeChat.matchedAt.slice(11,16)+' '+activeChat.matchedAt.slice(2,10)}}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="type_msg" v-if="activeChat != null">
-                    <div class="input_msg_write">
-                        <input v-model.trim="newMessageText" type="text" class="write_msg"
-                               placeholder="Type a message" v-on:keyup.enter="sendMsg"/>
-                        <button @click="sendMsg" class="msg_send_btn" type="button" :disabled="newMessageTextClear">
-                            <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
-                        </button>
+                    <div class="msg_history">
+                        <div v-for="msg in activeChatMessages" :key="msg.id"
+                             :class="{ 'outgoing_msg': msg.mine, 'incoming_msg': !msg.mine }">
+                            <div :class="{ 'sent_msg': msg.mine, 'received_msg': !msg.mine }">
+                                <div :class="{ 'received_withd_msg': !msg.mine }">
+                                    <p class="px-3 py-2">{{msg.text}}</p>
+                                    <span class="time_date">{{msg.sentAt}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="type_msg" v-if="activeChat != null">
+                        <div class="input_msg_write">
+                            <input v-model.trim="newMessageText" type="text" class="write_msg"
+                                   placeholder="Type a message" v-on:keyup.enter="sendMsg"/>
+                            <button @click="sendMsg" class="msg_send_btn" type="button" :disabled="newMessageTextClear">
+                                <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -172,9 +184,13 @@
 
 <style scoped>
 
+
+    .text-justify {
+        text-align: justify;
+    }
     /*main class*/
     .messaging {
-        margin: 100px 180px;
+        margin-top: 100px;
     }
 
     /*chat box*/
@@ -185,21 +201,111 @@
         overflow: hidden;
     }
 
-    /*left contact class*/
+    /*  **********************************************Left contact class **********************************************  */
     .inbox_people {
         background: white none repeat scroll 0 0;
-        float: left;
         overflow: hidden;
-        width: 25%;
+        padding: 0;
         border-right: 1px solid black;
     }
 
-    /* heading of the contact*/
-    .inbox_people .headind_srch {
-        background: white;
-        padding: 20px 30px;
+    /* ************************Heading of the contact************************ */
+    .headind_srch {
+        padding: 10px;
         overflow: hidden;
-        border-bottom: 1px beige;
+        margin: 0;
+        border-bottom: 1px beige solid;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .headind_srch h4{
+        margin: 0;
+    }
+
+    .inbox_chat {
+        height: 550px;
+        overflow-y: scroll;
+    }
+
+    /* ************************Contact list************************ */
+
+    .chat_people {
+        overflow: hidden;
+        clear: both;
+    }
+
+    .chat_list {
+        /*border-bottom: 1px solid #c4c4c4;*/
+        margin: 0;
+        padding: 18px 16px 10px;
+        cursor: pointer;
+    }
+
+    .chat_list h5 {
+        font-size: 15px;
+        color: #464646;
+        margin: 0 0 8px 0;
+    }
+
+    .chat_list h5 .chat_date {
+        font-size: 13px;
+    }
+
+    .chat_list p {
+        font-size: 14px;
+        color: #989898;
+    }
+
+    .chat_list:hover {
+        background-color: #F3F6FA;
+    }
+
+    .active_chat {
+        background: #6D8FAE !important;
+    }
+
+    .active_chat h5, p {
+        color: white;
+    }
+
+    .active_chat p {
+        color: white;
+    }
+
+
+    /*  **********************************************Right chat class **********************************************  */
+
+    .mesgs {
+        padding: 0 15px 0 25px;
+    }
+
+    /*  ********************************* Heading of the chat *********************************  */
+
+    .chat_heading{
+        padding: 10px;
+        overflow: hidden;
+        margin: 0;
+        border-bottom: 1px beige solid;
+        /*display: flex;*/
+        /*align-items: center;*/
+        /*justify-content: center;*/
+    }
+
+    .chat_heading h4{
+        margin: 0;
+    }
+
+    .chat_heading p{
+        color: black;
+        margin: 0;
+    }
+
+
+    /*  ********************************* chat message list *********************************  */
+    .mesgs .msg_history {
+        height: 516px;
+        overflow-y: auto;
     }
 
     .time_date {
@@ -209,20 +315,7 @@
         margin: 8px 0 0;
     }
 
-    /*right chat class*/
-    .mesgs {
-        float: left;
-        padding: 30px 15px 0 25px;
-        width: 75%;
-    }
-
-    /* upper part of chat*/
-    .mesgs .msg_history {
-        height: 516px;
-        overflow-y: auto;
-    }
-
-    /* lowwer part of chat */
+    /*  ********************************* message input area *********************************  */
     .mesgs .type_msg {
         border-top: 1px solid #c4c4c4;
         position: relative;
@@ -237,8 +330,6 @@
     }
 
     .recent_heading {
-        float: left;
-        width: 40%;
     }
 
     .srch_bar {
@@ -279,63 +370,6 @@
         width: 11%;
     }
 
-    .chat_ib {
-        float: left;
-        padding: 0 0 0 15px;
-        width: 88%;
-    }
-
-    .chat_people {
-        overflow: hidden;
-        clear: both;
-    }
-
-    .chat_list {
-        /*border-bottom: 1px solid #c4c4c4;*/
-        margin: 0;
-        padding: 18px 16px 10px;
-        cursor: pointer;
-    }
-
-    .chat_list h5 {
-        font-size: 15px;
-        color: #464646;
-        margin: 0 0 8px 0;
-    }
-
-    .chat_list h5 .chat_date {
-        font-size: 13px;
-        float: right;
-    }
-
-    .chat_list p {
-        font-size: 14px;
-        color: #989898;
-        margin: auto
-    }
-
-    .chat_list:hover {
-        background-color: #F3F6FA;
-    }
-
-    .active_chat {
-        background: #6D8FAE !important;
-    }
-
-    .active_chat h5, p {
-        color: white;
-    }
-
-    .active_chat p {
-        color: white;
-    }
-
-
-    .inbox_chat {
-        height: 550px;
-        overflow-y: scroll;
-    }
-
     .incoming_msg_img {
         display: inline-block;
         width: 6%;
@@ -353,7 +387,7 @@
         color: #646464;
     }
 
-    .sent_msg p, .received_withd_msg p{
+    .sent_msg p, .received_withd_msg p {
         border-radius: 15px;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
@@ -362,6 +396,7 @@
         margin: 0;
         width: 100%;
     }
+
     .sent_msg p {
         background: #5581C9 none repeat scroll 0 0;
         color: #fff;
