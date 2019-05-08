@@ -13,7 +13,7 @@
                             <div class="chat_people">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h5 class="font-weight-bold ">{{chat.matchedUser.name}}</h5>
-                                    <p class="">{{chat.lastMessage.sentAt}}</p>
+                                    <p class="" v-if="chat.lastMessage != null">{{chat.lastMessage.sentAt}}</p>
                                 </div>
                                     <p v-if="chat.lastMessage != null">{{chat.lastMessage.text}}</p>
                             </div>
