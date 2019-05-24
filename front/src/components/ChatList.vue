@@ -33,7 +33,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="msg_history">
+                    <div class="msg_history" @scroll="loadOnScroll">
+                        <div class="text-center">
+                            <div v-if="chatStatus === loading" class="spinner-border" role="status">
+                                <span class="sr-only" >oading...</span>
+                            </div>
+                        </div>
+
                         <div v-for="msg in activeChatMessages" :key="msg.id"
                              :class="{ 'outgoing_msg': msg.mine, 'incoming_msg': !msg.mine }">
                             <div :class="{ 'sent_msg': msg.mine, 'received_msg': !msg.mine }">
@@ -67,6 +73,7 @@
                 chatList: [],
                 activeChat: null,
                 activeChatMessages: [],
+                chatNums: 10,
 
                 loading: 'loading',
                 loaded: 'loaded',
@@ -95,6 +102,13 @@
             }
         },
         methods: {
+            loadOnScroll(){
+                const chatHistory = this.$el.querySelector(".msg_history");
+                if (chatHistory.scrollTop === 0 && this.chatNums <=30){
+                    this.chatNums += 10;
+                    this.loadChat();
+                }
+            },
             scrollChatHistory() {
                 const chatHistory = this.$el.querySelector(".msg_history");
                 chatHistory.scrollTop = chatHistory.scrollHeight;
@@ -126,7 +140,7 @@
                     params: {
                         matchId: chat.id,
                         from: 0,
-                        to: 10
+                        to: context.chatNums
                     }
                 }).then(response => {
                     if (response.data.status === 'ok') {
@@ -154,7 +168,7 @@
                         if (response.data.status === 'ok') {
                             context.newMessageText = "";
                             context.newMessageStatus = context.loaded;
-                            context.loadChat(this.activeChat);
+                            context.loadChat();
                             context.scrollChatHistory();
 
                         } else if (response.data.status === 'error') {
@@ -174,7 +188,7 @@
             }
             this.loadChatsList();
             this.loadChat();
-            this.chatRefresher = setInterval(this.loadChat, 3 * 1000);
+            this.chatRefresher = setInterval(this.loadChat, 60 * 1000);
         },
         beforeDestroy() {
             clearInterval(this.chatRefresher);
