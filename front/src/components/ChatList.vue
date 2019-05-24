@@ -8,8 +8,8 @@
                     </div>
                     <div class="inbox_chat">
 
-                        <div v-for="chat in chatList" :key="chat.id" @click="activeChat = chat"
-                             :class="{chat_list:true, active_chat: chat==activeChat}">
+                        <div v-for="chat in chatList" :key="chat.id" @click="activeChat = chat,  chatNums = 10"
+                             :class="{chat_list:true, active_chat: chat===activeChat}">
                             <div class="chat_people">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h5 class="font-weight-bold ">{{chat.matchedUser.name}}</h5>
@@ -80,7 +80,7 @@
                 error: 'error',
 
                 listStatus: 'loading',
-                chatStatus: 'loading',
+                chatStatus: '',
                 errorCode: null,
 
                 newMessageText: '',
