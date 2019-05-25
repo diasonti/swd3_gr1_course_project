@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="messaging col-lg-8 col-md-10 col-sm-12 offset-lg-2 offset-md-1">
+        <div v-bind:class="{'col-lg-8 offset-lg-2 col-sm-10 offset-sm-1 ': !profileTab, 'col-md-8 offset-md-1 col-sm-10':profileTab}" class="messaging">
             <div class="inbox_msg row">
                 <div class="inbox_people col-sm-3 col-xs-2">
                     <div class="headind_srch">
@@ -25,7 +25,7 @@
                         <div v-if="activeChat != null">
                             <div class="row">
                                 <div class="col-4 offset-4">
-                                    <h4>{{activeChat.matchedUser.name}}</h4>
+                                    <h4 @click="profileTab=true">{{activeChat.matchedUser.name}}</h4>
                                 </div>
                                 <div class="col-4">
                                     <p class="text-muted">Matched at {{activeChat.matchedAt.slice(11,16)+' '+activeChat.matchedAt.slice(2,10)}}</p>
@@ -62,6 +62,40 @@
                 </div>
             </div>
         </div>
+        <div v-if="profileTab" class="col-sm-2 profileTabClass">
+            <div class="row flex-md-row-reverse pr-3 pb-3">
+                <button type="button" class="close" aria-label="Close" @click="profileTab = false">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form>
+                <div class="form-group">
+                    <label for="profileName">User Name</label>
+                    <input type="text" class="form-control-plaintext" id="profileName" v-model="activeChat.matchedUser.name" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="profileGender">Gender</label>
+                    <input type="text" class="form-control-plaintext" id="profileGender" v-model="activeChat.matchedUser.gender" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="profileAge">Age</label>
+                    <input type="text" class="form-control-plaintext" id="profileAge" v-model="activeChat.matchedUser.age" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="profileLocation">Location</label>
+                    <input type="text" class="form-control-plaintext" id="profileLocation" v-model="activeChat.matchedUser.location" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="profileDscp">Description</label>
+                    <textarea class="form-control-plaintext" id="profileDscp" rows="3" v-model="activeChat.matchedUser.description" readonly></textarea>
+                </div>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -82,6 +116,7 @@
                 listStatus: 'loading',
                 chatStatus: '',
                 errorCode: null,
+                profileTab: false,
 
                 newMessageText: '',
                 newMessageStatus: 'loaded',
@@ -198,6 +233,12 @@
 
 <style scoped>
 
+    .profileTabClass{
+        margin-top: 100px;
+        padding-top: 10px;
+        border: 1px solid black;
+        overflow: hidden;
+    }
 
     .text-justify {
         text-align: justify;
