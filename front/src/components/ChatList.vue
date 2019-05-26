@@ -71,27 +71,27 @@
 
             <form>
                 <div class="form-group">
-                    <label for="profileName">User Name</label>
+                    <label for="profileName">User Name:</label>
                     <input type="text" class="form-control-plaintext" id="profileName" v-model="activeChat.matchedUser.name" readonly>
                 </div>
-
+                <hr>
                 <div class="form-group">
-                    <label for="profileGender">Gender</label>
+                    <label for="profileGender">Gender:</label>
                     <input type="text" class="form-control-plaintext" id="profileGender" v-model="activeChat.matchedUser.gender" readonly>
                 </div>
-
+                <hr>
                 <div class="form-group">
-                    <label for="profileAge">Age</label>
+                    <label for="profileAge">Age:</label>
                     <input type="text" class="form-control-plaintext" id="profileAge" v-model="activeChat.matchedUser.age" readonly>
                 </div>
-
+                <hr>
                 <div class="form-group">
-                    <label for="profileLocation">Location</label>
+                    <label for="profileLocation">Location:</label>
                     <input type="text" class="form-control-plaintext" id="profileLocation" v-model="activeChat.matchedUser.location" readonly>
                 </div>
-
+                <hr>
                 <div class="form-group">
-                    <label for="profileDscp">Description</label>
+                    <label for="profileDscp">Description:</label>
                     <textarea class="form-control-plaintext" id="profileDscp" rows="3" v-model="activeChat.matchedUser.description" readonly></textarea>
                 </div>
             </form>
@@ -223,7 +223,7 @@
             }
             this.loadChatsList();
             this.loadChat();
-            this.chatRefresher = setInterval(this.loadChat, 60 * 1000);
+            this.chatRefresher = setInterval(this.loadChat, 3 * 1000);
         },
         beforeDestroy() {
             clearInterval(this.chatRefresher);
@@ -276,6 +276,7 @@
     }
     .headind_srch h4{
         margin: 0;
+
     }
 
     .inbox_chat {
@@ -349,6 +350,11 @@
 
     .chat_heading h4{
         margin: 0;
+    }
+
+    .chat_heading h4:hover{
+        text-decoration: underline;
+        color:deepskyblue;
     }
 
     .chat_heading p{
